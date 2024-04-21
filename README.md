@@ -1,4 +1,4 @@
-![Streamlit Flow Logo](./assets/streamlit-flow-banner-bg.svg)
+![Streamlit Flow Logo](https://raw.githubusercontent.com/dkapur17/streamlit-flow/master/assets/streamlit-flow-banner-bg.svg)
 
 # Streamlit Flow
 
@@ -299,6 +299,13 @@ if element:
   ```
 </details>
 
+
+## Installation
+
+```bash
+pip install streamlit_flow
+```
+
 ## Running the example
 
 
@@ -316,15 +323,11 @@ cd streamlit_flow/frontend
 npm start
 ```
 
-#### Run the Example Streamlit App
+#### Run this Example Streamlit App
 On the second terminal, run from the root of the repository
 ```bash
 streamlit run example.py
 ```
-
-## Installation
-
-> Still working on making the library available on pypi.
 
 ## API
 
