@@ -31,7 +31,7 @@ const ReactFlowComponent = () => {
     }, []);
 
     const onConnect = useCallback(
-    params => setEdges(eds => addEdge(params, eds)),
+    params => setEdges(eds => addEdge({...params, animated:renderData.args["animateNewEdges"]}, eds)),
     []
     )
 
