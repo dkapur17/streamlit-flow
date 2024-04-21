@@ -303,7 +303,7 @@ if element:
 ## Installation
 
 ```bash
-pip install streamlit_flow
+pip install streamlit-flow-component
 ```
 
 ## Running the example

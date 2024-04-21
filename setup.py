@@ -6,7 +6,7 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
-    name="streamlit-flow",
+    name="streamlit-flow-component",
     version="0.5.0",
     author="Dhruv Kapur",
     author_email="dhruvkapur4@gmail.com",
