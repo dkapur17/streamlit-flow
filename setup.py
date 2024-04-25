@@ -7,13 +7,13 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="streamlit-flow-component",
-    version="0.5.0",
+    version="0.6.0",
     author="Dhruv Kapur",
     author_email="dhruvkapur4@gmail.com",
     description="Streamlit Component Wrapper for React Flow",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/dkapur17/streamlit-flow",
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=[],

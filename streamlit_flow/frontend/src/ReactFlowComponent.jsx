@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect } from "react"
-import { Streamlit } from "streamlit-component-lib"
-import { useRenderData } from "streamlit-component-lib-react-hooks"
+import { 
+    Streamlit, 
+    withStreamlitConnection
+} from "streamlit-component-lib"
+
 import ReactFlow, {
     Controls,
     Background,
@@ -15,11 +18,13 @@ import 'reactflow/dist/style.css';
 import createElkGraphLayout from "./layouts/ElkLayout"
 
 
-const ReactFlowComponent = () => {
-    const renderData = useRenderData()
+const ReactFlowComponent = (props) => {
+    const renderData = props;
 
     const [nodes, setNodes, onNodesChange] = useNodesState()
     const [edges, setEdges, onEdgesChange] = useEdgesState()
+    
+    useEffect(() => Streamlit.setFrameHeight());
 
     useEffect(() => {
     createElkGraphLayout(renderData.args["nodes"], renderData.args["edges"], renderData.args["layoutOptions"])
@@ -47,29 +52,25 @@ const ReactFlowComponent = () => {
 
     return (
     <div style={{height: renderData.args["height"]}}>
-        <ReactFlow
-            nodes={nodes}
-            onNodesChange={onNodesChange}
-            edges={edges}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            fitView={renderData.args["fitView"]}
-            style={renderData.args["style"]}
-            onNodeClick={onNodeClick}
-            onEdgeClick={onEdgeClick}
-        >
-            <Background/>
-            {renderData.args["showControls"] && <Controls/>}
-            {renderData.args["showMiniMap"] && <MiniMap/>}
-        </ReactFlow>
+        <ReactFlowProvider>
+            <ReactFlow
+                nodes={nodes}
+                onNodesChange={onNodesChange}
+                edges={edges}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                fitView={renderData.args["fitView"]}
+                style={renderData.args["style"]}
+                onNodeClick={onNodeClick}
+                onEdgeClick={onEdgeClick}
+            >
+                <Background/>
+                {renderData.args["showControls"] && <Controls/>}
+                {renderData.args["showMiniMap"] && <MiniMap/>}
+            </ReactFlow>
+        </ReactFlowProvider>
     </div>
     );
 }
 
-export default function() {
-    return (
-    <ReactFlowProvider>
-        <ReactFlowComponent/>
-    </ReactFlowProvider>
-    )
-};
+export default withStreamlitConnection(ReactFlowComponent);
