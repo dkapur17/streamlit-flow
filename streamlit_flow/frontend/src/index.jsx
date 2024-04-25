@@ -4,7 +4,7 @@ import ReactFlowComponent from "./ReactFlowComponent"
 
 ReactDOM.render(
     <React.StrictMode>
-            <ReactFlowComponent />
+        <ReactFlowComponent />
     </React.StrictMode>,
     document.getElementById("root")
 )

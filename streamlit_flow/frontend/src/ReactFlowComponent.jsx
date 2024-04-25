@@ -19,7 +19,6 @@ import createElkGraphLayout from "./layouts/ElkLayout"
 
 
 const ReactFlowComponent = (props) => {
-    const renderData = props;
 
     const [nodes, setNodes, onNodesChange] = useNodesState()
     const [edges, setEdges, onEdgesChange] = useEdgesState()
@@ -27,7 +26,7 @@ const ReactFlowComponent = (props) => {
     useEffect(() => Streamlit.setFrameHeight());
 
     useEffect(() => {
-    createElkGraphLayout(renderData.args["nodes"], renderData.args["edges"], renderData.args["layoutOptions"])
+    createElkGraphLayout(props.args["nodes"], props.args["edges"], props.args["layoutOptions"])
         .then(({nodes, edges}) => {
         setNodes(nodes);
         setEdges(edges);
@@ -36,22 +35,22 @@ const ReactFlowComponent = (props) => {
     }, []);
 
     const onConnect = useCallback(
-    params => setEdges(eds => addEdge({...params, animated:renderData.args["animateNewEdges"]}, eds)),
+    params => setEdges(eds => addEdge({...params, animated:props.args["animateNewEdges"]}, eds)),
     []
     )
 
     const onNodeClick = (e, node) => {
-    if (renderData.args['getNodeOnClick'])
+    if (props.args['getNodeOnClick'])
         Streamlit.setComponentValue({elementType: 'node', ...node})
     }
 
     const onEdgeClick = (e, edge) => {
-    if (renderData.args['getEdgeOnClick'])
+    if (props.args['getEdgeOnClick'])
         Streamlit.setComponentValue({elementType: 'edge', ...edge})
     }
 
     return (
-    <div style={{height: renderData.args["height"]}}>
+    <div style={{height: props.args["height"]}}>
         <ReactFlowProvider>
             <ReactFlow
                 nodes={nodes}
@@ -59,14 +58,14 @@ const ReactFlowComponent = (props) => {
                 edges={edges}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
-                fitView={renderData.args["fitView"]}
-                style={renderData.args["style"]}
+                fitView={props.args["fitView"]}
+                style={props.args["style"]}
                 onNodeClick={onNodeClick}
                 onEdgeClick={onEdgeClick}
             >
                 <Background/>
-                {renderData.args["showControls"] && <Controls/>}
-                {renderData.args["showMiniMap"] && <MiniMap/>}
+                {props.args["showControls"] && <Controls/>}
+                {props.args["showMiniMap"] && <MiniMap/>}
             </ReactFlow>
         </ReactFlowProvider>
     </div>
