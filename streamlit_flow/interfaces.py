@@ -1,4 +1,7 @@
-from typing import Dict, Tuple, Union
+from typing import Dict, Tuple, Union, Type, TypeVar
+
+T_StreamlitFlowNode = TypeVar('T_StreamlitFlowNode', bound='StreamlitFlowNode')
+T_StreamlitFlowEdge = TypeVar('T_StreamlitFlowEdge', bound='StreamlitFlowEdge')
 
 class StreamlitFlowNode:
     def __init__(self, 
@@ -46,6 +49,32 @@ class StreamlitFlowNode:
 
 
         self.__validate__()
+
+    @classmethod
+    def from_dict(cls: Type[T_StreamlitFlowNode], node_dict:Dict[str, any]) -> T_StreamlitFlowNode:
+
+        other_attributes_dict = {key: value for key, value in node_dict.items() if key not in ['id', 'position', 'data', 'type', 'sourcePosition', 'targetPosition', 'hidden', 'selected', 'dragging', 'draggable', 'selectable', 'connectable', 'resizing', 'deletable', 'width', 'height', 'zIndex', 'focusable', 'style']}
+        return cls( id=node_dict.get('id', ''),
+                    pos=(node_dict['position'].get('x', 0), node_dict['position'].get('y', 0)),
+                    data=node_dict.get('data', {}),
+                    node_type=node_dict.get('type', 'default'),
+                    source_position=node_dict.get('sourcePosition', 'bottom'),
+                    target_position=node_dict.get('targetPosition', 'top'),
+                    hidden=node_dict.get('hidden', False),
+                    selected=node_dict.get('selected', False),
+                    dragging=node_dict.get('dragging', False),
+                    draggable=node_dict.get('draggable', True),
+                    selectable=node_dict.get('selectable', False),
+                    connectable=node_dict.get('connectable', True),
+                    resizing=node_dict.get('resizing', False),
+                    deletable=node_dict.get('deletable', False),
+                    width=node_dict.get('width', None),
+                    height=node_dict.get('height', None),
+                    z_index=node_dict.get('zIndex', 0),
+                    focusable=node_dict.get('focusable', True),
+                    style=node_dict.get('style', {}),
+                    **other_attributes_dict)
+
 
     def __validate__(self):
         assert self.type in ['default', 'input', 'output'], f"Node type must be one of ['default', 'input', 'output']. Got {self.type}"
@@ -117,6 +146,28 @@ class StreamlitFlowEdge:
         self.kwargs = kwargs
 
         self.__validate__()
+
+    @classmethod
+    def from_dict(cls: Type[T_StreamlitFlowEdge], edge_dict:Dict[str, any]) -> T_StreamlitFlowEdge:
+        
+        other_attributes_dict = {key: value for key, value in edge_dict.items() if key not in ['id', 'source', 'target', 'type', 'hidden', 'animated', 'selected', 'deletable', 'focusable', 'zIndex', 'label', 'labelStyle', 'labelShowBg', 'labelBgStyle', 'style']}
+        return cls( id=edge_dict.get('id', ''),
+                    source=edge_dict.get('source', ''),
+                    target=edge_dict.get('target', ''),
+                    edge_type=edge_dict.get('type', 'default'),
+                    hidden=edge_dict.get('hidden', False),
+                    animated=edge_dict.get('animated', False),
+                    selected=edge_dict.get('selected', False),
+                    deletable=edge_dict.get('deletable', False),
+                    focusable=edge_dict.get('focusable', False),
+                    z_index=edge_dict.get('zIndex', 0),
+                    label=edge_dict.get('label', ''),
+                    label_style=edge_dict.get('labelStyle', {}),
+                    label_show_bg=edge_dict.get('labelShowBg', False),
+                    label_bg_style=edge_dict.get('labelBgStyle', {}),
+                    style=edge_dict.get('style', {}),
+                    **other_attributes_dict)
+
 
     def __validate__(self) -> None:
         assert self.type in ['default', 'straight', 'step', "smoothstep", "simplebezier"], f"Edge type must be one of ['default', 'straight', 'step', 'smoothstep', 'simplebezier']. Got {self.type}"
