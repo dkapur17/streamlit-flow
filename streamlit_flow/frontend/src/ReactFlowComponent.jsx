@@ -33,15 +33,7 @@ const ReactFlowComponent = (props) => {
         setNodes(props.args['nodes']); 
         setEdges(props.args['edges']);
     }, [props.args])
-
-    // useEffect(() => {
-    //     handleDataReturnToStreamlit(null, nodes, edges);
-    // }, [nodes, edges]);
-
-    // const onConnect = useCallback(
-    // params => setEdges(eds => addEdge({...params, animated:props.args["animateNewEdges"]}, eds)),
-    // []
-    // )
+    
 
     const onConnect = (params) => {
         const newEdges = addEdge({...params, animated:props.args["animateNewEdges"]}, edges);
@@ -78,6 +70,7 @@ const ReactFlowComponent = (props) => {
                 onNodeClick={onNodeClick}
                 onEdgeClick={onEdgeClick}
                 onNodeDragStop={onNodeDragStop}
+                panOnDrag={props.args.panOnDrag}
             >
                 <Background/>
                 {props.args["showControls"] && <Controls/>}
