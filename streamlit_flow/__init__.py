@@ -34,12 +34,14 @@ def streamlit_flow(key:str,
                     layout_horizontal_spacing:int=150,
                     get_node_on_click:bool=False,
                     get_edge_on_click:bool=False,
-                    pan_on_drag:bool=True):
+                    pan_on_drag:bool=True,
+                    enable_pane_menu:bool=False,
+                    enable_node_menu:bool=False):
     
     assert direction in ["manual", "up", "down", "left", "right"], f"direction must be one of ['manual', 'up', 'down', 'left', 'right']. Got {direction}"
 
 
-    if key not in st.session_state:
+    if key not in st.session_state or not st.session_state[key]:
         nodes = [node.__to_dict__() for node in init_nodes]
         edges = [edge.__to_dict__() for edge in init_edges]
     else:
@@ -59,6 +61,8 @@ def streamlit_flow(key:str,
                                         getNodeOnClick=get_node_on_click,
                                         getEdgeOnClick=get_edge_on_click,
                                         panOnDrag=pan_on_drag,
+                                        enableNodeMenu=enable_node_menu,
+                                        enablePaneMenu=enable_pane_menu,
                                         key=key)
     if component_value:
         return (component_value['selectedID'])

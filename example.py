@@ -86,7 +86,8 @@ ret = streamlit_flow(
     get_edge_on_click=True,
     animate_new_edges=True,
     allow_new_edges=True,
-    pan_on_drag=False,
+    enable_pane_menu=True,
+    enable_node_menu=True
 )
 
 if ret:
