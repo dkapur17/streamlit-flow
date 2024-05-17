@@ -11,10 +11,14 @@ import ReactFlow, {
     useNodesState,
     useEdgesState,
     addEdge,
-    ReactFlowProvider
+    ReactFlowProvider,
+    useReactFlow
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
+
 import './style.css';
 import PaneConextMenu from "./components/PaneContextMenu";
 import NodeContextMenu from "./components/NodeContextMenu";
@@ -29,7 +33,7 @@ const ReactFlowComponent = (props) => {
     const [nodeContextMenu, setNodeContextMenu] = useState(null);
 
     const ref = useRef(null);
-
+    const reactFlowInstance = useReactFlow();
 
     const onPaneContextMenu = (event) => {
         setNodeContextMenu(null);
@@ -41,6 +45,10 @@ const ReactFlowComponent = (props) => {
             left: event.clientX < pane.width - 200 && event.clientX,
             right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
             bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
+            clickPos: reactFlowInstance.screenToFlowPosition({
+                x: event.clientX,
+                y: event.clientY
+            })
         });
     }
 
@@ -55,6 +63,7 @@ const ReactFlowComponent = (props) => {
             left: event.clientX < pane.width - 200 && event.clientX,
             right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
             bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY,
+
         });
     }
 
@@ -112,8 +121,7 @@ const ReactFlowComponent = (props) => {
 
     return (
     <div style={{height: props.args["height"]}}>
-        <ReactFlowProvider>
-            <ReactFlow
+        <ReactFlow
                 ref={ref}
                 nodes={nodes}
                 onNodesChange={onNodesChange}
@@ -133,14 +141,21 @@ const ReactFlowComponent = (props) => {
                 onMoveStart={onMoveStart}
             >
                 <Background/>
-                {paneContextMenu && <PaneConextMenu {...paneContextMenu}/>}
-                {nodeContextMenu && <NodeContextMenu {...nodeContextMenu}/>}
+                {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} theme={props.theme}/>}
+                {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu}/>}
                 {props.args["showControls"] && <Controls/>}
                 {props.args["showMiniMap"] && <MiniMap/>}
-            </ReactFlow>
-        </ReactFlowProvider>
+        </ReactFlow>
     </div>
     );
 }
 
-export default withStreamlitConnection(ReactFlowComponent);
+const ContextualReactFlowComponent = (props) => {
+    return (
+        <ReactFlowProvider>
+            <ReactFlowComponent {...props}/>
+        </ReactFlowProvider>
+    );
+}
+
+export default withStreamlitConnection(ContextualReactFlowComponent);

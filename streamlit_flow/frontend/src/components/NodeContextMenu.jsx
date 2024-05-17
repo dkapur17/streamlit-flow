@@ -1,4 +1,4 @@
-const NodeContextMenu = (nodeContextMenu) => {
+const NodeContextMenu = ({nodeContextMenu}) => {
     
     return (
         <div style={{position: 'absolute', 
