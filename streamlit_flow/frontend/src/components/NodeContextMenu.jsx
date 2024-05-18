@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 import Modal from 'react-bootstrap/Modal';
@@ -7,9 +7,10 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setModalClosing, setNodes}) => {
+const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setModalClosing, setNodes, edges}) => {
 
     const [editedNode, setEditedNode] = useState(node);
+    const [allowTypeChange, setAllowTypeChange] = useState(edges.filter(edge => edge.source === editedNode.id || edge.target === editedNode.id).length === 0);
 
     const onExited = (e) => {
         setModalClosing(true);
@@ -64,7 +65,7 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
                 </Col>
                 <Col md>
                     <FloatingLabel controlId="floatingSelect" label="Node Type" onChange={onNodeTypeChange}>
-                        <Form.Select defaultValue={editedNode.type}>
+                        <Form.Select defaultValue={editedNode.type} disabled={!allowTypeChange}>
                             <option value="default">Default</option>
                             <option value="input">Input</option>
                             <option value="output">Output</option>
@@ -72,7 +73,7 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
                     </FloatingLabel>
                 </Col>
             </Row>
-            <Row className="g-2">
+            <Row className="g-2 mt-1 mt-md-0">
                 <Col md>
                     <FloatingLabel controlId="floatingSelect" label="Source Position" onChange={onNodeSourcePositionChange}>
                         <Form.Select defaultValue={editedNode.sourcePosition}>
@@ -117,7 +118,7 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
     </Modal>);
 };
 
-const NodeContextMenu = ({nodeContextMenu, setNodeContextMenu, setNodes, theme}) => {
+const NodeContextMenu = ({nodeContextMenu, setNodeContextMenu, setNodes, theme, edges}) => {
     
     const [showModal, setShowModal] = useState(false);
     const [modalClosing, setModalClosing] = useState(false);
@@ -160,7 +161,8 @@ const NodeContextMenu = ({nodeContextMenu, setNodeContextMenu, setNodes, theme})
                 theme={theme.base}
                 setNodeContextMenu={setNodeContextMenu}
                 setModalClosing={setModalClosing}
-                setNodes={setNodes}/>    
+                setNodes={setNodes}
+                edges={edges}/>    
         </>
     );
 };

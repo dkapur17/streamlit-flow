@@ -143,7 +143,7 @@ const ReactFlowComponent = (props) => {
             >
                 <Background/>
                 {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} setNodes={setNodes} theme={props.theme} handleDataReturnToStreamlit={handleDataReturnToStreamlit}/>}
-                {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} handleDataReturnToStreamlit={handleDataReturnToStreamlit}/>}
+                {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} handleDataReturnToStreamlit={handleDataReturnToStreamlit} edges={edges}/>}
                 {props.args["showControls"] && <Controls/>}
                 {props.args["showMiniMap"] && <MiniMap/>}
         </ReactFlow>

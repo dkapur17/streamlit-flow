@@ -100,7 +100,7 @@ const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModal
                     </FloatingLabel>
                 </Col>
             </Row>
-            <Row className="g-2">
+            <Row className="g-2 mt-1 mt-md-0">
                 <Col md>
                     <FloatingLabel controlId="floatingSelect" label="Source Position" onChange={onNodeSourcePositionChange}>
                         <Form.Select>
