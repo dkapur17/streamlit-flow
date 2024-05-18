@@ -70,6 +70,7 @@ const ReactFlowComponent = (props) => {
     const onPaneClick = (event) => {
         setPaneContextMenu(null);
         setNodeContextMenu(null);
+        handleDataReturnToStreamlit(null, nodes, edges);
     }
 
     const handleDataReturnToStreamlit = (selectedID, nodes, edges) => {
@@ -141,7 +142,7 @@ const ReactFlowComponent = (props) => {
                 onMoveStart={onMoveStart}
             >
                 <Background/>
-                {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} theme={props.theme}/>}
+                {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} setNodes={setNodes} theme={props.theme}/>}
                 {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu}/>}
                 {props.args["showControls"] && <Controls/>}
                 {props.args["showMiniMap"] && <MiniMap/>}

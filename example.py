@@ -5,6 +5,9 @@ from streamlit_flow.interfaces import StreamlitFlowNode, StreamlitFlowEdge
 
 st.title("Streamlit Flow")
 
+if 'count' not in st.session_state:
+    st.session_state.count = 0
+
 if 'init_nodes' not in st.session_state:
     st.session_state.init_nodes = [
             StreamlitFlowNode(  id="1", 
