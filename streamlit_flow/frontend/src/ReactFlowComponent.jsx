@@ -73,8 +73,8 @@ const ReactFlowComponent = (props) => {
         handleDataReturnToStreamlit(null, nodes, edges);
     }
 
-    const handleDataReturnToStreamlit = (selectedID, nodes, edges) => {
-        Streamlit.setComponentValue({selectedID, nodes, edges})
+    const handleDataReturnToStreamlit = (selectedID, _nodes=null, _edges=null) => {
+        Streamlit.setComponentValue({selectedID, nodes: _nodes ? _nodes : nodes, edges: edges? _edges : edges});
     }
 
     useEffect(() => Streamlit.setFrameHeight());
@@ -83,8 +83,8 @@ const ReactFlowComponent = (props) => {
         setNodes(props.args['nodes']); 
         setEdges(props.args['edges']);
     }, [props.args])
-    
 
+    
     const onConnect = (params) => {
         const newEdges = addEdge({...params, animated:props.args["animateNewEdges"]}, edges);
         handleDataReturnToStreamlit(null, nodes, newEdges);
@@ -142,8 +142,8 @@ const ReactFlowComponent = (props) => {
                 onMoveStart={onMoveStart}
             >
                 <Background/>
-                {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} setNodes={setNodes} theme={props.theme}/>}
-                {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu}/>}
+                {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} setNodes={setNodes} theme={props.theme} handleDataReturnToStreamlit={handleDataReturnToStreamlit}/>}
+                {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} handleDataReturnToStreamlit={handleDataReturnToStreamlit}/>}
                 {props.args["showControls"] && <Controls/>}
                 {props.args["showMiniMap"] && <MiniMap/>}
         </ReactFlow>

@@ -176,7 +176,7 @@ const PaneConextMenu = ({paneContextMenu, setPaneContextMenu, setNodes, theme}) 
                         borderRadius: '8px',
                         zIndex: 10}}>
             {(!showModal && !modalClosing) && <ButtonGroup vertical>
-                <Button variant="light" onClick={handleAddNode}><i className='bi bi-pencil'></i> Create New Node</Button>
+                <Button variant="outline-primary" onClick={handleAddNode}><i className='bi bi-pencil'></i> Create New Node</Button>
                 <Button variant="outline-success" onClick={handleLayoutReset}><i className='bi bi-arrow-clockwise'></i> Reset Layout</Button>
             </ButtonGroup>}
         </div>

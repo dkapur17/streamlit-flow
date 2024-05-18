@@ -62,20 +62,20 @@ if 'init_nodes' not in st.session_state:
             ),
         ]
     
-if st.button("Add Node"):
+# if st.button("Add Node"):
 
-    st.session_state.init_nodes = [StreamlitFlowNode.from_dict(node) for node in st.session_state['my_flow']['nodes']]
-    st.session_state.init_edges = [StreamlitFlowEdge.from_dict(edge) for edge in st.session_state['my_flow']['edges']]
+#     st.session_state.init_nodes = [StreamlitFlowNode.from_dict(node) for node in st.session_state['my_flow']['nodes']]
+#     st.session_state.init_edges = [StreamlitFlowEdge.from_dict(edge) for edge in st.session_state['my_flow']['edges']]
 
-    st.session_state.init_nodes.append(
-        StreamlitFlowNode(  id=str(len(st.session_state.init_nodes)+1), 
-                            pos=(200, 200), 
-                            data={"label": f"Node {len(st.session_state.init_nodes)+1}"},
-                            node_type="default",
-                            source_position='right',
-                            target_position='left'))
+#     st.session_state.init_nodes.append(
+#         StreamlitFlowNode(  id=str(len(st.session_state.init_nodes)+1), 
+#                             pos=(200, 200), 
+#                             data={"label": f"Node {len(st.session_state.init_nodes)+1}"},
+#                             node_type="default",
+#                             source_position='right',
+#                             target_position='left'))
     
-    del st.session_state['my_flow']
+#     del st.session_state['my_flow']
     
 
 ret = streamlit_flow(
@@ -95,3 +95,9 @@ ret = streamlit_flow(
 
 if ret:
     st.write(ret)
+
+
+if st.button("Count Up"):
+    st.session_state.count += 1
+
+st.write(st.session_state.count)
