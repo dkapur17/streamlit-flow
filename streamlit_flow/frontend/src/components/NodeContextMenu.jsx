@@ -1,3 +1,8 @@
+import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
+
+
 const NodeContextMenu = ({nodeContextMenu}) => {
     
     return (
@@ -5,12 +10,14 @@ const NodeContextMenu = ({nodeContextMenu}) => {
                         top: nodeContextMenu.top, 
                         left: nodeContextMenu.left, 
                         right: nodeContextMenu.right, 
-                        bottom: nodeContextMenu.bottom, 
-                        background: 'white',
-                        color: 'black', 
-                        border: '1px solid black', 
+                        bottom: nodeContextMenu.bottom,
+                        backgroundColor: 'white',
+                        borderRadius: '8px',
                         zIndex: 10}}>
-            Node Context Menu {nodeContextMenu.id}
+            <ButtonGroup vertical>
+                <Button variant="light"><i className="bi bi-tools"></i> Edit Node</Button>
+                <Button variant="outline-danger"><i className="bi bi-trash3"></i> Delete Node</Button>
+            </ButtonGroup>
         </div>
     );
 };

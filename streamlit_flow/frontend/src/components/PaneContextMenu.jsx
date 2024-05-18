@@ -9,9 +9,6 @@ import Col from 'react-bootstrap/Col';
 import { nanoid } from 'nanoid';
 
 const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModalClosing, clickPosition, setNodes }) => {
-    
-    // const [nodeName, setNodeName] = useState('');
-    // const [nodeType, setNodeType] = useState('default');
 
     const [newNode, setNewNode] = useState({
         nodeName: '',
@@ -24,12 +21,10 @@ const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModal
     });
 
     const onNodeNameChange = (e) => {
-        // setNodeName(e.target.value);
         setNewNode((newNode) => ({...newNode, nodeName: e.target.value}));
     }
 
     const onNodeTypeChange = (e) => {
-        // setNodeType(e.target.value);
         setNewNode((newNode) => ({...newNode, nodeType: e.target.value}));
     }
 
@@ -164,7 +159,11 @@ const PaneConextMenu = ({paneContextMenu, setPaneContextMenu, setNodes, theme}) 
 
     const handleAddNode = (e) => {
         handleShow();
-    }
+    };
+
+    const handleLayoutReset = (e) => {
+        setPaneContextMenu(null);
+    };
 
     return (
         <>
@@ -172,11 +171,13 @@ const PaneConextMenu = ({paneContextMenu, setPaneContextMenu, setNodes, theme}) 
                         top: paneContextMenu.top, 
                         left: paneContextMenu.left, 
                         right: paneContextMenu.right, 
-                        bottom: paneContextMenu.bottom, 
+                        bottom: paneContextMenu.bottom,
+                        backgroundColor: 'white',
+                        borderRadius: '8px',
                         zIndex: 10}}>
             {(!showModal && !modalClosing) && <ButtonGroup vertical>
-                <Button variant="light" onClick={handleAddNode}>Create New Node</Button>
-                <Button variant="secondary" disabled>Reset Layout</Button>
+                <Button variant="light" onClick={handleAddNode}><i className='bi bi-pencil'></i> Create New Node</Button>
+                <Button variant="outline-success" onClick={handleLayoutReset}><i className='bi bi-arrow-clockwise'></i> Reset Layout</Button>
             </ButtonGroup>}
         </div>
         <CreateNodeModal show={showModal} 
