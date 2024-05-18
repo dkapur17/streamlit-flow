@@ -58,7 +58,7 @@ const ReactFlowComponent = (props) => {
         const pane = ref.current.getBoundingClientRect();
 
         setNodeContextMenu({
-            id: node.id,
+            node: node,
             top: event.clientY < pane.height - 200 && event.clientY,
             left: event.clientX < pane.width - 200 && event.clientX,
             right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
@@ -84,7 +84,7 @@ const ReactFlowComponent = (props) => {
         setEdges(props.args['edges']);
     }, [props.args])
 
-    
+
     const onConnect = (params) => {
         const newEdges = addEdge({...params, animated:props.args["animateNewEdges"]}, edges);
         handleDataReturnToStreamlit(null, nodes, newEdges);
