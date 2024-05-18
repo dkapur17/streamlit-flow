@@ -84,9 +84,9 @@ const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModal
             <Modal.Title>Create New Node</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <Row className='g=2'>
+            <Row className='g-2'>
                 <Col md>
-                    <FloatingLabel controlId="floatingInput" label="Node Name" className="mb-3">
+                    <FloatingLabel controlId="floatingInput" label="Node Name">
                         <Form.Control type="text" placeholder="nodeName" autoFocus onChange={onNodeNameChange}/>
                     </FloatingLabel>
                 </Col>

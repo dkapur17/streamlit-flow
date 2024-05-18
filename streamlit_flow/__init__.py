@@ -36,7 +36,8 @@ def streamlit_flow(key:str,
                     get_edge_on_click:bool=False,
                     pan_on_drag:bool=True,
                     enable_pane_menu:bool=False,
-                    enable_node_menu:bool=False):
+                    enable_node_menu:bool=False,
+                    enable_edge_menu:bool=False):
     
     assert direction in ["manual", "up", "down", "left", "right"], f"direction must be one of ['manual', 'up', 'down', 'left', 'right']. Got {direction}"
 
@@ -63,6 +64,7 @@ def streamlit_flow(key:str,
                                         panOnDrag=pan_on_drag,
                                         enableNodeMenu=enable_node_menu,
                                         enablePaneMenu=enable_pane_menu,
+                                        enableEdgeMenu=enable_edge_menu,
                                         key=key)
     if component_value:
         return (component_value['selectedID'])

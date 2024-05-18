@@ -22,6 +22,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import './style.css';
 import PaneConextMenu from "./components/PaneContextMenu";
 import NodeContextMenu from "./components/NodeContextMenu";
+import EdgeContextMenu from "./components/EdgeContextMenu";
 
 
 const ReactFlowComponent = (props) => {
@@ -31,12 +32,14 @@ const ReactFlowComponent = (props) => {
     
     const [paneContextMenu, setPaneContextMenu] = useState(null);
     const [nodeContextMenu, setNodeContextMenu] = useState(null);
+    const [edgeContextMenu, setEdgeContextMenu] = useState(null);
 
     const ref = useRef(null);
     const reactFlowInstance = useReactFlow();
 
     const onPaneContextMenu = (event) => {
         setNodeContextMenu(null);
+        setEdgeContextMenu(null);
         event.preventDefault();
 
         const pane = ref.current.getBoundingClientRect();
@@ -54,6 +57,7 @@ const ReactFlowComponent = (props) => {
 
     const onNodeContextMenu = (event, node) => {
         setPaneContextMenu(null);
+        setNodeContextMenu(null);
         event.preventDefault();
         const pane = ref.current.getBoundingClientRect();
 
@@ -67,9 +71,25 @@ const ReactFlowComponent = (props) => {
         });
     }
 
+    const onEdgeContextMenu = (event, edge) => {
+        setPaneContextMenu(null);
+        setNodeContextMenu(null);
+        event.preventDefault();
+        const pane = ref.current.getBoundingClientRect();
+
+        setEdgeContextMenu({
+            edge: edge,
+            top: event.clientY < pane.height - 200 && event.clientY,
+            left: event.clientX < pane.width - 200 && event.clientX,
+            right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
+            bottom: event.clientY >= pane.height - 200 && pane.height - event.clientY
+        });
+    }
+
     const onPaneClick = (event) => {
         setPaneContextMenu(null);
         setNodeContextMenu(null);
+        setEdgeContextMenu(null);
         handleDataReturnToStreamlit(null, nodes, edges);
     }
 
@@ -94,6 +114,7 @@ const ReactFlowComponent = (props) => {
     const onNodeClick = (e, node) => {
         setPaneContextMenu(null);
         setNodeContextMenu(null);
+        setEdgeContextMenu(null);
         if (props.args['getNodeOnClick'])
             handleDataReturnToStreamlit(node.id, nodes, edges);
     }
@@ -101,6 +122,7 @@ const ReactFlowComponent = (props) => {
     const onEdgeClick = (e, edge) => {
         setPaneContextMenu(null);
         setNodeContextMenu(null);
+        setEdgeContextMenu(null);
         if (props.args['getEdgeOnClick'])
             handleDataReturnToStreamlit(edge.id, nodes, edges);
     }
@@ -108,6 +130,7 @@ const ReactFlowComponent = (props) => {
     const onNodeDragStart = (event, node) => {
         setPaneContextMenu(null);
         setNodeContextMenu(null);
+        setEdgeContextMenu(null);
     }
 
     const onNodeDragStop = (event, node) => {
@@ -117,6 +140,7 @@ const ReactFlowComponent = (props) => {
     const onMoveStart = (event, data) => {
         setPaneContextMenu(null);
         setNodeContextMenu(null);
+        setEdgeContextMenu(null);
     }
 
 
@@ -139,11 +163,13 @@ const ReactFlowComponent = (props) => {
                 panOnDrag={props.args.panOnDrag}
                 onPaneContextMenu={props.args.enablePaneMenu ? onPaneContextMenu: (event) => {}}
                 onPaneClick={onPaneClick}
+                onEdgeContextMenu={props.args.enableEdgeMenu ? onEdgeContextMenu: (event, edge) => {}}
                 onMoveStart={onMoveStart}
             >
                 <Background/>
-                {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} setNodes={setNodes} theme={props.theme} handleDataReturnToStreamlit={handleDataReturnToStreamlit}/>}
-                {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} handleDataReturnToStreamlit={handleDataReturnToStreamlit} edges={edges}/>}
+                {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} setNodes={setNodes} theme={props.theme}/>}
+                {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} edges={edges}/>}
+                {edgeContextMenu && <EdgeContextMenu edgeContextMenu={edgeContextMenu} setEdgeContextMenu={setEdgeContextMenu} setEdges={setEdges} theme={props.theme}/>}
                 {props.args["showControls"] && <Controls/>}
                 {props.args["showMiniMap"] && <MiniMap/>}
         </ReactFlow>

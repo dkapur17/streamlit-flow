@@ -57,9 +57,9 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
             <Modal.Title>Edit Node</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <Row className='g=2'>
+        <Row className='g-2'>
                 <Col md>
-                    <FloatingLabel controlId="floatingInput" label="Node Name" className="mb-3">
+                    <FloatingLabel controlId="floatingInput" label="Node Name">
                         <Form.Control type="text" placeholder="nodeName" value={editedNode.data.label} autoFocus onChange={onNodeNameChange}/>
                     </FloatingLabel>
                 </Col>
@@ -95,7 +95,7 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
                     </FloatingLabel>
                 </Col>
             </Row>
-            <Row className="g-3 mt-2">
+            <Row className="g-2 mt-2">
                 <Col md>
                     <Form.Check type="switch" id="node-draggable-switch" label="Draggable" defaultChecked={editedNode.draggable} onChange={onNodeDraggableChange}/>
                 </Col>
@@ -152,7 +152,7 @@ const NodeContextMenu = ({nodeContextMenu, setNodeContextMenu, setNodes, theme, 
                             zIndex: 10}}>
                 {(!showModal && !modalClosing) && <ButtonGroup vertical>
                     <Button variant="outline-primary" onClick={handleEditNode}><i className="bi bi-tools"></i> Edit Node</Button>
-                    <Button variant="outline-danger" onClick={handleDeleteNode}><i className="bi bi-trash3"></i> Delete Node</Button>
+                    <Button variant={nodeContextMenu.node.deletable ? "outline-danger" : "secondary"} onClick={handleDeleteNode} disabled={!nodeContextMenu.node.deletable}><i className="bi bi-trash3"></i> Delete Node</Button>
                 </ButtonGroup>}
             </div>
             <EditNodeModal show={showModal}
