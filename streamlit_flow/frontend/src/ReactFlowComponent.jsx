@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState } from "react"
+import React, { useRef, useEffect, useState, useCallback } from "react"
 import { 
     Streamlit, 
     withStreamlitConnection
 } from "streamlit-component-lib"
+import Dagre from '@dagrejs/dagre';
 
 import ReactFlow, {
     Controls,
@@ -12,7 +13,8 @@ import ReactFlow, {
     useEdgesState,
     addEdge,
     ReactFlowProvider,
-    useReactFlow
+    useReactFlow,
+    Panel
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -24,11 +26,14 @@ import PaneConextMenu from "./components/PaneContextMenu";
 import NodeContextMenu from "./components/NodeContextMenu";
 import EdgeContextMenu from "./components/EdgeContextMenu";
 
+import createElkGraphLayout from "./layouts/ElkLayout";
 
 const ReactFlowComponent = (props) => {
 
-    const [nodes, setNodes, onNodesChange] = useNodesState(props.args['nodes'])
-    const [edges, setEdges, onEdgesChange] = useEdgesState(props.args['edges'])
+
+    const [viewFitAfterLayout, setViewFitAfterLayout] = useState(null);
+    const [nodes, setNodes, onNodesChange] = useNodesState(props.args['nodes']);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(props.args['edges']);
     
     const [paneContextMenu, setPaneContextMenu] = useState(null);
     const [nodeContextMenu, setNodeContextMenu] = useState(null);
@@ -36,6 +41,33 @@ const ReactFlowComponent = (props) => {
 
     const ref = useRef(null);
     const reactFlowInstance = useReactFlow();
+    const {fitView} = useReactFlow();
+
+    useEffect(() => Streamlit.setFrameHeight());
+
+    useEffect(() => {
+        console.log(props.args['layoutOptions'])
+        createElkGraphLayout(props.args["nodes"], props.args["edges"], props.args["layoutOptions"])
+            .then(({nodes, edges}) => {
+                setNodes(nodes);
+                setEdges(edges);
+                setViewFitAfterLayout(false);
+            })
+            .catch(err => console.log(err));
+    }, []);
+
+    useEffect(() => {
+        setNodes(props.args['nodes']); 
+        setEdges(props.args['edges']);
+    }, [props.args])
+
+    useEffect(() => {
+        if (!viewFitAfterLayout && props.args["fitView"])
+            {
+                fitView();
+                setViewFitAfterLayout(true);
+            }
+        }, [viewFitAfterLayout, props.args["fitView"]]);
 
     const onPaneContextMenu = (event) => {
         setNodeContextMenu(null);
@@ -96,14 +128,6 @@ const ReactFlowComponent = (props) => {
     const handleDataReturnToStreamlit = (selectedID, _nodes=null, _edges=null) => {
         Streamlit.setComponentValue({selectedID, nodes: _nodes ? _nodes : nodes, edges: edges? _edges : edges});
     }
-
-    useEffect(() => Streamlit.setFrameHeight());
-
-    useEffect(() => {
-        setNodes(props.args['nodes']); 
-        setEdges(props.args['edges']);
-    }, [props.args])
-
 
     const onConnect = (params) => {
         const newEdges = addEdge({...params, animated:props.args["animateNewEdges"]}, edges);

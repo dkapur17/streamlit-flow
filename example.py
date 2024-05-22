@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_flow import streamlit_flow
 from streamlit_flow.interfaces import StreamlitFlowNode, StreamlitFlowEdge
+from streamlit_flow.layouts import *
 
 
 st.title("Streamlit Flow")
@@ -54,12 +55,12 @@ if 'init_nodes' not in st.session_state:
                 target='4',
                 animated=True,
             ),
-            StreamlitFlowEdge(
-                id='3-4',
-                source='3',
-                target='4',
-                animated=True,
-            ),
+            # StreamlitFlowEdge(
+            #     id='3-4',
+            #     source='3',
+            #     target='4',
+            #     animated=True,
+            # ),
         ]
     
 # if st.button("Add Node"):
@@ -83,7 +84,7 @@ ret = streamlit_flow(
     init_nodes=st.session_state.init_nodes,
     init_edges=st.session_state.init_edges,
     fit_view=True,
-    direction='right',
+    layout=TreeLayout(direction='right'),
     show_minimap=True,
     get_node_on_click=True,
     get_edge_on_click=True,
@@ -102,3 +103,8 @@ if st.button("Count Up"):
     st.session_state.count += 1
 
 st.write(st.session_state.count)
+
+with st.form("my_form"):
+    val = st.text_input("Enter a value")
+    if st.form_submit_button("Submit"):
+        st.write(val)

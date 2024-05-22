@@ -5,6 +5,7 @@ import streamlit as st
 from typing import List
 
 from .interfaces import StreamlitFlowNode, StreamlitFlowEdge
+from .layouts import Layout, ManualLayout
 
 _RELEASE = False
 
@@ -29,9 +30,7 @@ def streamlit_flow(key:str,
                     allow_new_edges:bool=False,
                     animate_new_edges:bool=False,
                     style:dict={},
-                    direction:str="manual",
-                    layout_vertical_spacing:int=75,
-                    layout_horizontal_spacing:int=150,
+                    layout:Layout=ManualLayout(),
                     get_node_on_click:bool=False,
                     get_edge_on_click:bool=False,
                     pan_on_drag:bool=True,
@@ -39,7 +38,7 @@ def streamlit_flow(key:str,
                     enable_node_menu:bool=False,
                     enable_edge_menu:bool=False):
     
-    assert direction in ["manual", "up", "down", "left", "right"], f"direction must be one of ['manual', 'up', 'down', 'left', 'right']. Got {direction}"
+    # assert direction in ["manual", "up", "down", "left", "right"], f"direction must be one of ['manual', 'up', 'down', 'left', 'right']. Got {direction}"
 
 
     if key not in st.session_state or not st.session_state[key]:
@@ -58,7 +57,7 @@ def streamlit_flow(key:str,
                                         style=style,
                                         animateNewEdges=animate_new_edges,
                                         allowNewEdges=allow_new_edges,
-                                        layoutOptions={"direction": direction.upper(), "defaultHeight": layout_vertical_spacing, "defaultWidth": layout_horizontal_spacing},
+                                        layoutOptions=layout.__to_dict__(),
                                         getNodeOnClick=get_node_on_click,
                                         getEdgeOnClick=get_edge_on_click,
                                         panOnDrag=pan_on_drag,

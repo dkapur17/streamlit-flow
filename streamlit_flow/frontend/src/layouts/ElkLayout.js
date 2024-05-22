@@ -1,20 +1,12 @@
 import Elk from 'elkjs/lib/elk.bundled.js';
 
+
 const createElkGraphLayout = async (graphNodes, graphEdges, options) => {
     
-    const {direction, defaultHeight, defaultWidth} = options;
-
-    if (direction === 'MANUAL')
-        return {nodes: graphNodes, edges: graphEdges}
-
+    const {defaultHeight, defaultWidth} = options;
 
     const elk = new Elk({
-        defaultLayoutOptions: {
-        'elk.algorithm': 'layered',
-        'elk.direction': direction,
-        'elk.spacing.nodeNode': '75',
-        'elk.layered.spacing.nodeNodeBetweenLayers': '75'
-        }
+        defaultLayoutOptions: options.elkOptions
     })
 
     const nodes = []
