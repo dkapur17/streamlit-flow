@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_flow import streamlit_flow
-from streamlit_flow.interfaces import StreamlitFlowNode, StreamlitFlowEdge
+from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
 from streamlit_flow.layouts import *
 
 

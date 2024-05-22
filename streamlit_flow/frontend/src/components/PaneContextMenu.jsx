@@ -8,6 +8,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { nanoid } from 'nanoid';
 
+import createElkGraphLayout from '../layouts/ElkLayout';
+
 const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModalClosing, clickPosition, setNodes }) => {
 
     const [newNode, setNewNode] = useState({
@@ -146,7 +148,7 @@ const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModal
     );
 }
 
-const PaneConextMenu = ({paneContextMenu, setPaneContextMenu, setNodes, theme}) => {
+const PaneConextMenu = ({paneContextMenu, setPaneContextMenu, nodes, edges, layoutOptions, setNodes, theme}) => {
     
     const [showModal, setShowModal] = useState(false);
     const [modalClosing, setModalClosing] = useState(false);
@@ -163,6 +165,11 @@ const PaneConextMenu = ({paneContextMenu, setPaneContextMenu, setNodes, theme}) 
 
     const handleLayoutReset = (e) => {
         setPaneContextMenu(null);
+        createElkGraphLayout(nodes, edges, layoutOptions)
+            .then(({nodes, edges}) => {
+                setNodes(nodes);
+            })
+            .catch(err => console.log(err));
     };
 
     return (

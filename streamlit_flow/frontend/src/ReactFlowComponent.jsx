@@ -3,7 +3,6 @@ import {
     Streamlit, 
     withStreamlitConnection
 } from "streamlit-component-lib"
-import Dagre from '@dagrejs/dagre';
 
 import ReactFlow, {
     Controls,
@@ -191,7 +190,7 @@ const ReactFlowComponent = (props) => {
                 onMoveStart={onMoveStart}
             >
                 <Background/>
-                {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} setNodes={setNodes} theme={props.theme}/>}
+                {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} nodes={nodes} edges={edges} setNodes={setNodes} layoutOptions={props.args['layoutOptions']} theme={props.theme}/>}
                 {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} edges={edges}/>}
                 {edgeContextMenu && <EdgeContextMenu edgeContextMenu={edgeContextMenu} setEdgeContextMenu={setEdgeContextMenu} setEdges={setEdges} theme={props.theme}/>}
                 {props.args["showControls"] && <Controls/>}

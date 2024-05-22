@@ -4,7 +4,7 @@ import streamlit as st
 
 from typing import List
 
-from .interfaces import StreamlitFlowNode, StreamlitFlowEdge
+from .elements import StreamlitFlowNode, StreamlitFlowEdge
 from .layouts import Layout, ManualLayout
 
 _RELEASE = False
