@@ -1,7 +1,9 @@
-from typing import Dict, List, Union
+from abc import ABC, abstractmethod
+from typing import Dict
 
-class Layout:
+class Layout(ABC):
 
+    @abstractmethod
     def __to_dict__(self) -> Dict[str, any]:
         raise NotImplementedError("Subclasses must implement this method")
 
