@@ -84,7 +84,7 @@ ret = streamlit_flow(
     init_nodes=st.session_state.init_nodes,
     init_edges=st.session_state.init_edges,
     fit_view=True,
-    layout=TreeLayout(direction='right'),
+    layout=LayeredLayout(direction='down'),
     show_minimap=True,
     get_node_on_click=True,
     get_edge_on_click=True,

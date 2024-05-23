@@ -53,7 +53,7 @@ const ReactFlowComponent = (props) => {
                 setViewFitAfterLayout(false);
             })
             .catch(err => console.log(err));
-    }, []);
+    }, [props.args["layoutOptions"]]);
 
     useEffect(() => {
         setNodes(props.args['nodes']); 
