@@ -16,7 +16,7 @@ class StreamlitFlowNode:
                     dragging:bool=False,
                     draggable:bool=True,
                     selectable:bool=False,
-                    connectable:bool=True,
+                    connectable:bool=False,
                     resizing:bool=False,
                     deletable:bool=False,
                     width:Union[float, None]=None,

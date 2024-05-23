@@ -59,7 +59,6 @@ class TreeLayout(Layout):
                     'elk.algorithm': "org.eclipse.elk.mrtree",
                     'elk.direction': self.direction.upper(),
                     'elk.spacing.nodeNode': self.node_node_spacing
-                    ,
                 }
         }
 

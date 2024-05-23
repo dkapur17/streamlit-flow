@@ -38,7 +38,7 @@ const EditEdgeModal = ({show, edge, handleClose, theme, setEdgeContextMenu, setM
     }
 
     const handleSaveChanges = (e) => {
-        setEdges((edges) => edges.map(ed => ed.id === editedEdge.id ? editedEdge : ed));
+        setEdges((edges) => edges.map(ed => ed.id === editedEdge.id ? {...editedEdge} : ed));
         setEdgeContextMenu(null);
     };
 

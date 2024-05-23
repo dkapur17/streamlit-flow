@@ -45,20 +45,28 @@ const ReactFlowComponent = (props) => {
     useEffect(() => Streamlit.setFrameHeight());
 
     useEffect(() => {
-        console.log(props.args['layoutOptions'])
-        createElkGraphLayout(props.args["nodes"], props.args["edges"], props.args["layoutOptions"])
+        createElkGraphLayout(nodes, edges, props.args["layoutOptions"])
             .then(({nodes, edges}) => {
                 setNodes(nodes);
                 setEdges(edges);
                 setViewFitAfterLayout(false);
             })
             .catch(err => console.log(err));
-    }, [props.args["layoutOptions"]]);
+    }, []);
 
     useEffect(() => {
-        setNodes(props.args['nodes']); 
-        setEdges(props.args['edges']);
-    }, [props.args])
+        createElkGraphLayout(nodes, edges, props.args["layoutOptions"])
+            .then(({nodes, edges}) => {
+                setNodes(nodes);
+                setEdges(edges);
+                setViewFitAfterLayout(false);
+            })
+            .catch(err => console.log(err));
+    }, [props.width])
+
+    useEffect(() => {
+        handleDataReturnToStreamlit(null, nodes, edges);
+    }, [nodes.length, edges.length])
 
     useEffect(() => {
         if (!viewFitAfterLayout && props.args["fitView"])
@@ -67,6 +75,10 @@ const ReactFlowComponent = (props) => {
                 setViewFitAfterLayout(true);
             }
         }, [viewFitAfterLayout, props.args["fitView"]]);
+
+    useEffect(() => {
+        setEdges(edges.map(edge => ({...edge, labelStyle:{'fill': props.theme.base === "dark" ? 'white' : 'black'}})))
+    }, [props.theme])
 
     const onPaneContextMenu = (event) => {
         setNodeContextMenu(null);
@@ -129,7 +141,7 @@ const ReactFlowComponent = (props) => {
     }
 
     const onConnect = (params) => {
-        const newEdges = addEdge({...params, animated:props.args["animateNewEdges"]}, edges);
+        const newEdges = addEdge({...params, animated:props.args["animateNewEdges"], labelShowBg:false}, edges);
         handleDataReturnToStreamlit(null, nodes, newEdges);
         setEdges(newEdges);
     }
@@ -188,7 +200,9 @@ const ReactFlowComponent = (props) => {
                 onPaneClick={onPaneClick}
                 onEdgeContextMenu={props.args.enableEdgeMenu ? onEdgeContextMenu: (event, edge) => {}}
                 onMoveStart={onMoveStart}
-            >
+                zoomOnDoubleClick={props.args['allowZoom']}
+                zoomOnScroll={props.args['allowZoom']}
+                zoomOnPinch={props.args['allowZoom']}>
                 <Background/>
                 {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} nodes={nodes} edges={edges} setNodes={setNodes} layoutOptions={props.args['layoutOptions']} theme={props.theme}/>}
                 {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} edges={edges}/>}
