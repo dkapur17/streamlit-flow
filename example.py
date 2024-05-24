@@ -1,67 +1,23 @@
 import streamlit as st
 from streamlit_flow import streamlit_flow
-from streamlit_flow.interfaces import StreamlitFlowNode, StreamlitFlowEdge
+from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
+from streamlit_flow.layouts import TreeLayout
 
+st.title("Streamlit Flow Example")
 
-st.title("Streamlit Flow")
-element = streamlit_flow(
-    nodes=[
-        StreamlitFlowNode(  id="1", 
-                            pos=(100, 100), 
-                            data={"label": "Node 1"},
-                            node_type="input",
-                            source_position='right'),
-        StreamlitFlowNode(  id="2", 
-                            pos=(200, 200), 
-                            data={"label": "Node 2"},
-                            node_type="default",
-                            source_position='right',
-                            target_position='left'),
-        StreamlitFlowNode(  id="3", 
-                            pos=(200, 200), 
-                            data={"label": "Node 3"},
-                            node_type="default",
-                            source_position='right',
-                            target_position='left'),
-        StreamlitFlowNode(  id="4", 
-                            pos=(200, 200), 
-                            data={"label": "Node 4"},
-                            node_type="output",
-                            target_position='left'),
-        
-    ],
-    edges=[
-        StreamlitFlowEdge(
-            id='1-2',
-            source='1',
-            target='2',
-            animated=True,
-        ),
-        StreamlitFlowEdge(
-            id='1-3',
-            source='1',
-            target='3',
-            animated=True,
-        ),
-        StreamlitFlowEdge(
-            id='2-4',
-            source='2',
-            target='4',
-            animated=True,
-        ),
-        StreamlitFlowEdge(
-            id='3-4',
-            source='3',
-            target='4',
-            animated=True,
-        ),
-    ],
-    fit_view=True,
-    direction='right',
-    show_minimap=True,
-    get_node_on_click=True,
-    get_edge_on_click=True
-)
+nodes = [StreamlitFlowNode("1", (0, 0), {'label': 'Node 1'}, 'input', 'right'),
+        StreamlitFlowNode("2", (1, 0), {'label': 'Node 2'}, 'default', 'right', 'left'),
+        StreamlitFlowNode("3", (2, 0), {'label': 'Node 3'}, 'default', 'right', 'left'),
+        StreamlitFlowNode("4", (2, 1), {'label': 'Node 4'}, 'output', target_position='left'),
+        StreamlitFlowNode("5", (3, 0), {'label': 'Node 5'}, 'output', target_position='left'),
+        StreamlitFlowNode("6", (3, 1), {'label': 'Node 6'}, 'output', target_position='left'),
+        StreamlitFlowNode("7", (4, 0), {'label': 'Node 7'}, 'output', target_position='left'),]
 
-if element:
-    st.write(f"Currently selected {element['elementType']} {element['id']}")
+edges = [StreamlitFlowEdge("1-2", "1", "2", animated=True),
+        StreamlitFlowEdge("1-3", "1", "3", animated=True),
+        StreamlitFlowEdge("2-4", "2", "4", animated=True),
+        StreamlitFlowEdge("2-5", "2", "5", animated=True),
+        StreamlitFlowEdge("3-6", "3", "6", animated=True),
+        StreamlitFlowEdge("3-7", "3", "7", animated=True)]
+
+streamlit_flow('example_flow', nodes, edges, layout=TreeLayout(direction='right'), fit_view=True)
