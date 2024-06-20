@@ -11,7 +11,7 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
 
     const [editedNode, setEditedNode] = useState(node);
     const [allowTypeChange, setAllowTypeChange] = useState(edges.filter(edge => edge.source === editedNode.id || edge.target === editedNode.id).length === 0);
-
+    
     const onExited = (e) => {
         setModalClosing(true);
         setNodeContextMenu(null);
@@ -19,6 +19,11 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
 
     const onNodeContentChange = (e) => {
         setEditedNode((editedNode) => ({...editedNode, data: {...editedNode.data, content: e.target.value}}));
+    };
+
+    const onNodeWidthChange = (e) => {
+        const currStyle = editedNode.data.style;
+        setEditedNode((editedNode) => ({...editedNode, width: e.target.value, style: {...currStyle, width: e.target.value + 'px'}}));
     };
 
     const onNodeTypeChange = (e) => {
@@ -60,21 +65,26 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
         <Row className='g-2'>
             <Col md>
                 <FloatingLabel controlId="floatingInput" label="Node Content">
-                    <Form.Control type="text" as="textarea" style={{ height: '100px' }} placeholder="nodeName" value={editedNode.data.content} autoFocus onChange={onNodeContentChange}/>
+                    <Form.Control type="text" as="textarea" style={{ height: '100px' }} placeholder="nodeContent" value={editedNode.data.content} autoFocus onChange={onNodeContentChange}/>
                 </FloatingLabel>
             </Col>
         </Row>
         <Row className='g-2 mt-1 mt-md-0'>
-                <Col md>
-                    <FloatingLabel controlId="floatingSelect" label="Node Type" onChange={onNodeTypeChange}>
-                        <Form.Select defaultValue={editedNode.type} disabled={!allowTypeChange}>
-                            <option value="default">Default</option>
-                            <option value="input">Input</option>
-                            <option value="output">Output</option>
-                        </Form.Select>
-                    </FloatingLabel>
-                </Col>
-            </Row>
+            <Col md>
+                <FloatingLabel controlId="floatingInput" label="Node Width">
+                    <Form.Control type="number" placeholder="nodeWidth" value={editedNode.width} autoFocus onChange={onNodeWidthChange}/>
+                </FloatingLabel>
+            </Col>
+            <Col md>
+                <FloatingLabel controlId="floatingSelect" label="Node Type" onChange={onNodeTypeChange}>
+                    <Form.Select defaultValue={editedNode.type} disabled={!allowTypeChange}>
+                        <option value="default">Default</option>
+                        <option value="input">Input</option>
+                        <option value="output">Output</option>
+                    </Form.Select>
+                </FloatingLabel>
+            </Col>
+        </Row>
             <Row className="g-2 mt-1 mt-md-0">
                 <Col md>
                     <FloatingLabel controlId="floatingSelect" label="Source Position" onChange={onNodeSourcePositionChange}>

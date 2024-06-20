@@ -23,7 +23,7 @@ st.title("Streamlit Flow Example")
 #         StreamlitFlowEdge("3-7", "3", "7", animated=True)]
 
 
-nodes = [StreamlitFlowNode("main", (0, 0), {'content':"# Markdown Support in Nodes"}, 'input', 'bottom', style={'width': '400px'}, width=400),
+nodes = [StreamlitFlowNode("main", (0, 0), {'content':"# Markdown Support in Nodes"}, 'input', 'bottom', width=400),
         StreamlitFlowNode("text", (0, 0), {'content': 
 """### Text
 Can support markdown text styles: **bold**, *italic*, `code` and $\\text{math}$"""}, 'output', 'bottom', 'top'),
@@ -62,7 +62,7 @@ $\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$
 | 1 | 2 | 3 | 4 |
 | 5 | 6 | 7 | 8 |
 
-"""}, 'output', 'top', 'right', style={'width': '160px'}, width=160),
+"""}, 'output', 'top', 'right', width=160),
 
         StreamlitFlowNode("tasks", (0, 0), {'content':
 """## Tasklist
@@ -72,7 +72,7 @@ $\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$
 """}, 'output', 'top', 'bottom'),
 
         StreamlitFlowNode("html", (0, 0), {'content':
-"""## Raw HTML"""}, 'default', 'top', 'bottom'),
+"""## Raw HTML"""}, 'default', 'top', 'bottom', width=200),
     
         StreamlitFlowNode("link", (0, 0), {'content':
 """### Link
@@ -98,7 +98,7 @@ This is hidden content
     <source src="https://github.com/dkapur17/streamlit-flow/raw/master/assets/FastBuild.mp4" type="video/mp4">
 </video>
 
-"""}, 'output', 'bottom', 'top', style={'width': '300px'}, width=300)]
+"""}, 'output', 'bottom', 'top', width=300)]
 
 edges = [StreamlitFlowEdge("main-text", "main", "text", animated=True),
             StreamlitFlowEdge("main-code", "main", "code", animated=True),
@@ -114,4 +114,4 @@ edges = [StreamlitFlowEdge("main-text", "main", "text", animated=True),
             StreamlitFlowEdge("html-image", "html", "image", animated=True),
             StreamlitFlowEdge("html-video", "html", "video", animated=True)]
 
-streamlit_flow('example_flow', nodes, edges, layout=RadialLayout(), fit_view=True, height=1000, enable_node_menu=True, hide_watermark=True)
+streamlit_flow('example_flow', nodes, edges, layout=RadialLayout(), fit_view=True, height=1000, enable_node_menu=True, enable_pane_menu=True, hide_watermark=True, allow_new_edges=True)

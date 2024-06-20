@@ -44,10 +44,14 @@ class StreamlitFlowNode:
         self.height = height
         self.z_index = z_index
         self.focusable = focusable
-        self.style = style
         self.kwargs = kwargs
 
-        # Remove post V1.2.1
+        if self.width is None:
+            self.width = 200
+
+        self.style = {**style, 'width': self.width, 'height': self.height}
+
+        # Remove post V1.3.0
         if 'label' in self.data:
             content = self.data.pop('label')
             self.data['content'] = content
@@ -58,6 +62,7 @@ class StreamlitFlowNode:
     def from_dict(cls: Type[T_StreamlitFlowNode], node_dict:Dict[str, any]) -> T_StreamlitFlowNode:
 
         other_attributes_dict = {key: value for key, value in node_dict.items() if key not in ['id', 'position', 'data', 'type', 'sourcePosition', 'targetPosition', 'hidden', 'selected', 'dragging', 'draggable', 'selectable', 'connectable', 'resizing', 'deletable', 'width', 'height', 'zIndex', 'focusable', 'style']}
+        
         return cls( id=node_dict.get('id', ''),
                     pos=(node_dict['position'].get('x', 0), node_dict['position'].get('y', 0)),
                     data=node_dict.get('data', {}),

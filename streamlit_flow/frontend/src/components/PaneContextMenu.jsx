@@ -19,11 +19,16 @@ const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModal
         targetPosition: 'left',
         draggable: true,
         connectable: true,
-        deletable: true
+        deletable: true,
+        nodeWidth: 200
     });
 
-    const onNodeNameChange = (e) => {
-        setNewNode((newNode) => ({...newNode, nodeName: e.target.value}));
+    const onNodeContentChange = (e) => {
+        setNewNode((newNode) => ({...newNode, nodeContent: e.target.value}));
+    }
+
+    const onNodeWidthChange = (e) => {
+        setNewNode((newNode) => ({...newNode, nodeWidth: e.target.value}));
     }
 
     const onNodeTypeChange = (e) => {
@@ -60,22 +65,27 @@ const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModal
             id: `${newNode.nodeName.replace(' ','_')}_${nanoid()}`,
             type: newNode.nodeType,
             position: clickPosition,
-            data: {label: newNode.nodeName},
+            data: {content: newNode.nodeContent},
             sourcePosition: newNode.sourcePosition,
             targetPosition: newNode.targetPosition,
             draggable: newNode.draggable,
             connectable: newNode.connectable,
-            deletable: newNode.deletable
+            deletable: newNode.deletable,
+            style: {
+                width: newNode.nodeWidth + "px"
+            },
+            width: newNode.width
         }]);
 
         setNewNode({
-            nodeName: '',
+            nodeContent: '',
             nodeType: 'default',
             sourcePosition: 'right',
             targetPosition: 'left',
             draggable: true,
             connectable: true,
-            deletable: true
+            deletable: true,
+            nodeWidth: 200
         });
         handleClose();
     }
@@ -88,8 +98,15 @@ const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModal
         <Modal.Body>
             <Row className='g-2'>
                 <Col md>
-                    <FloatingLabel controlId="floatingInput" label="Node Name">
-                        <Form.Control type="text" placeholder="nodeName" autoFocus onChange={onNodeNameChange}/>
+                    <FloatingLabel controlId="floatingInput" label="Node Content">
+                        <Form.Control type="text" as="textarea" style={{height: '100px'}} placeholder="nodeContent" autoFocus onChange={onNodeContentChange}/>
+                    </FloatingLabel>
+                </Col>
+            </Row>
+            <Row className='g-2 mt-1 mt-md-0'>
+                <Col md>
+                    <FloatingLabel controlId="floatingInput" label="Node Width">
+                        <Form.Control type="number" value={newNode.nodeWidth} placeholder="nodeWidth" autoFocus onChange={onNodeWidthChange}/>
                     </FloatingLabel>
                 </Col>
                 <Col md>
@@ -140,7 +157,7 @@ const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModal
             <Button variant="secondary" onClick={handleClose}>
                 Close
             </Button>
-            <Button variant="primary" disabled={!newNode.nodeName.trim().length} onClick={handleCreateNode}>
+            <Button variant="primary" onClick={handleCreateNode}>
                 Create Node
             </Button>
         </Modal.Footer>
