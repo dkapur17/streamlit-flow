@@ -1,10 +1,9 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import ReactFlowComponent from "./ReactFlowComponent"
+import React from "react";
+import ReactFlowComponent from "./ReactFlowComponent";
+import {createRoot} from 'react-dom/client';
 
-ReactDOM.render(
+createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <ReactFlowComponent />
-    </React.StrictMode>,
-    document.getElementById("root")
-)
+    </React.StrictMode>
+);

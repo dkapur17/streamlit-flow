@@ -17,8 +17,8 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
         setNodeContextMenu(null);
     }
 
-    const onNodeNameChange = (e) => {
-        setEditedNode((editedNode) => ({...editedNode, data: {...editedNode.data, label: e.target.value}}));
+    const onNodeContentChange = (e) => {
+        setEditedNode((editedNode) => ({...editedNode, data: {...editedNode.data, content: e.target.value}}));
     };
 
     const onNodeTypeChange = (e) => {
@@ -58,11 +58,13 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
         </Modal.Header>
         <Modal.Body>
         <Row className='g-2'>
-                <Col md>
-                    <FloatingLabel controlId="floatingInput" label="Node Name">
-                        <Form.Control type="text" placeholder="nodeName" value={editedNode.data.label} autoFocus onChange={onNodeNameChange}/>
-                    </FloatingLabel>
-                </Col>
+            <Col md>
+                <FloatingLabel controlId="floatingInput" label="Node Content">
+                    <Form.Control type="text" as="textarea" style={{ height: '100px' }} placeholder="nodeName" value={editedNode.data.content} autoFocus onChange={onNodeContentChange}/>
+                </FloatingLabel>
+            </Col>
+        </Row>
+        <Row className='g-2 mt-1 mt-md-0'>
                 <Col md>
                     <FloatingLabel controlId="floatingSelect" label="Node Type" onChange={onNodeTypeChange}>
                         <Form.Select defaultValue={editedNode.type} disabled={!allowTypeChange}>

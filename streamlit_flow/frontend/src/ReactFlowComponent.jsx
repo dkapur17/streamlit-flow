@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from "react"
+import React, { useRef, useEffect, useState, useCallback, useMemo } from "react"
 import { 
     Streamlit, 
     withStreamlitConnection
@@ -21,13 +21,18 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import './style.css';
+
+import {MarkdownInputNode, MarkdownOutputNode, MarkdownDefaultNode} from "./components/MarkdownNode";
 import PaneConextMenu from "./components/PaneContextMenu";
 import NodeContextMenu from "./components/NodeContextMenu";
 import EdgeContextMenu from "./components/EdgeContextMenu";
 
 import createElkGraphLayout from "./layouts/ElkLayout";
 
+
 const ReactFlowComponent = (props) => {
+
+    const nodeTypes = useMemo(() => ({ input: MarkdownInputNode, output: MarkdownOutputNode, default: MarkdownDefaultNode}), [])
 
 
     const [viewFitAfterLayout, setViewFitAfterLayout] = useState(null);
@@ -182,6 +187,7 @@ const ReactFlowComponent = (props) => {
     return (
     <div style={{height: props.args["height"]}}>
         <ReactFlow
+                nodeTypes={nodeTypes}
                 ref={ref}
                 nodes={nodes}
                 onNodesChange={onNodesChange}
@@ -202,7 +208,8 @@ const ReactFlowComponent = (props) => {
                 onMoveStart={onMoveStart}
                 zoomOnDoubleClick={props.args['allowZoom']}
                 zoomOnScroll={props.args['allowZoom']}
-                zoomOnPinch={props.args['allowZoom']}>
+                zoomOnPinch={props.args['allowZoom']}
+                proOptions={{hideAttribution: props.args['hideWatermark']}}>
                 <Background/>
                 {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} nodes={nodes} edges={edges} setNodes={setNodes} layoutOptions={props.args['layoutOptions']} theme={props.theme}/>}
                 {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} edges={edges}/>}

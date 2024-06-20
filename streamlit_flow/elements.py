@@ -47,6 +47,10 @@ class StreamlitFlowNode:
         self.style = style
         self.kwargs = kwargs
 
+        # Remove post V1.2.1
+        if 'label' in self.data:
+            content = self.data.pop('label')
+            self.data['content'] = content
 
         self.__validate__()
 
