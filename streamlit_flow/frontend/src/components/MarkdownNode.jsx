@@ -21,7 +21,7 @@ const MarkdownInputNode = ({ data, sourcePosition }) => {
     return (
         <>
         <Handle type="source" position={handlePosMap[sourcePosition]} isConnectable />
-            <div>
+            <div className="markdown-node">
                 <Markdown rehypePlugins={[rehypeHighlight, rehypeRaw, rehypeKatex]} remarkPlugins={[remarkGfm, remarkMath]}>{data.content}</Markdown>
             </div>
         </>

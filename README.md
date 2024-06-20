@@ -6,7 +6,7 @@
 
 **Build beautiful, interactive flow diagrams: Powered by React Flow, Simplified by Streamlit.**
 
-### 🎉 Version 1.2.1 is out now! 🎉
+### 🎉 Version 1.2.2 is out now! 🎉
 
 Introducing **Markdown Support in Nodes**! Now you are no longer limited to having text in your nodes. Use the features offered by Markdown and HTML to spice up your nodes.
 
