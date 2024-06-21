@@ -62,7 +62,7 @@ const CreateNodeModal = ({show, handleClose, theme, setPaneContextMenu, setModal
 
     const handleCreateNode = (e) => {
         setNodes((nodes) => [...nodes, {
-            id: `${newNode.nodeName.replace(' ','_')}_${nanoid()}`,
+            id: `${newNode.nodeContent.replace(' ','_')}_${nanoid()}`,
             type: newNode.nodeType,
             position: clickPosition,
             data: {content: newNode.nodeContent},
