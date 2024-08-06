@@ -24,11 +24,11 @@ st.title("Streamlit Flow Example")
 
 
 nodes = [StreamlitFlowNode("main", (0, 0), {'content':"# Markdown Support in Nodes"}, 'input', 'bottom', width=400),
-        StreamlitFlowNode("text", (0, 0), {'content': 
+        StreamlitFlowNode("text", (0, 0), {'content':
 """### Text
 Can support markdown text styles: **bold**, *italic*, `code` and $\\text{math}$"""}, 'output', 'bottom', 'top'),
 
-        StreamlitFlowNode("code", (0, 0), {'content': 
+        StreamlitFlowNode("code", (0, 0), {'content':
 """### Code Block 
 ```python
 print('Hello World')
@@ -73,7 +73,7 @@ $\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$
 
         StreamlitFlowNode("html", (0, 0), {'content':
 """## Raw HTML"""}, 'default', 'top', 'bottom', width=200),
-    
+
         StreamlitFlowNode("link", (0, 0), {'content':
 """### Link
 <a href="https://github.com/dkapur17/streamlit-flow" target="_blank">Streamlit Flow</a>"""}, 'output', 'top', 'bottom'),

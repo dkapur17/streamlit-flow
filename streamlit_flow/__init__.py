@@ -21,9 +21,9 @@ else:
 
 
 def streamlit_flow(key:str,
-                    init_nodes:List[StreamlitFlowNode], 
-                    init_edges:List[StreamlitFlowEdge], 
-                    height:int=500, 
+                    init_nodes:List[StreamlitFlowNode],
+                    init_edges:List[StreamlitFlowEdge],
+                    height:int=500,
                     fit_view:bool=False,
                     show_controls:bool=True,
                     show_minimap:bool=False,
@@ -39,7 +39,7 @@ def streamlit_flow(key:str,
                     enable_node_menu:bool=False,
                     enable_edge_menu:bool=False,
                     hide_watermark:bool=False):
-    
+
     # assert direction in ["manual", "up", "down", "left", "right"], f"direction must be one of ['manual', 'up', 'down', 'left', 'right']. Got {direction}"
 
 
@@ -50,9 +50,9 @@ def streamlit_flow(key:str,
         nodes = st.session_state[key]['nodes']
         edges = st.session_state[key]['edges']
 
-    component_value = _component_func(  nodes=nodes, 
-                                        edges=edges, 
-                                        height=height, 
+    component_value = _component_func(  nodes=nodes,
+                                        edges=edges,
+                                        height=height,
                                         showControls=show_controls,
                                         fitView=fit_view,
                                         showMiniMap=show_minimap,

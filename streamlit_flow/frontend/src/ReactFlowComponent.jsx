@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback, useMemo } from "react"
-import { 
-    Streamlit, 
+import {
+    Streamlit,
     withStreamlitConnection
 } from "streamlit-component-lib"
 
@@ -38,7 +38,7 @@ const ReactFlowComponent = (props) => {
     const [viewFitAfterLayout, setViewFitAfterLayout] = useState(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(props.args['nodes']);
     const [edges, setEdges, onEdgesChange] = useEdgesState(props.args['edges']);
-    
+
     const [paneContextMenu, setPaneContextMenu] = useState(null);
     const [nodeContextMenu, setNodeContextMenu] = useState(null);
     const [edgeContextMenu, setEdgeContextMenu] = useState(null);
@@ -166,7 +166,7 @@ const ReactFlowComponent = (props) => {
         if (props.args['getEdgeOnClick'])
             handleDataReturnToStreamlit(edge.id, nodes, edges);
     }
-    
+
     const onNodeDragStart = (event, node) => {
         setPaneContextMenu(null);
         setNodeContextMenu(null);
