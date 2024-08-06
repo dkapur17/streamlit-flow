@@ -114,4 +114,4 @@ edges = [StreamlitFlowEdge("main-text", "main", "text", animated=True),
             StreamlitFlowEdge("html-image", "html", "image", animated=True),
             StreamlitFlowEdge("html-video", "html", "video", animated=True)]
 
-streamlit_flow('example_flow', nodes, edges, layout=RadialLayout(), fit_view=True, height=1000, enable_node_menu=True, enable_pane_menu=True, hide_watermark=True, allow_new_edges=True)
+streamlit_flow('example_flow', nodes, edges, layout=RadialLayout(), fit_view=True, height=1000, enable_node_menu=True, show_minimap=True, enable_pane_menu=True, hide_watermark=True, allow_new_edges=True, min_zoom=0.1)
