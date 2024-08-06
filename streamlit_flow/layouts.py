@@ -38,7 +38,8 @@ class LayeredLayout(Layout):
                     'elk.algorithm': "layered",
                     'elk.direction': self.direction.upper(),
                     'elk.spacing.nodeNode': self.node_node_spacing,
-                    'elk.layered.spacing.nodeNodeBetweenLayers': self.node_layer_spacing
+                    'elk.layered.spacing.nodeNodeBetweenLayers': self.node_layer_spacing,
+                    'elk.layered.considerModelOrder.strategy': "NODES_AND_EDGES"
                 }
         }
 
