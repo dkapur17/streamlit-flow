@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback, useMemo } from "react"
-import { 
-    Streamlit, 
+import {
+    Streamlit,
     withStreamlitConnection
 } from "streamlit-component-lib"
 
@@ -38,7 +38,7 @@ const ReactFlowComponent = (props) => {
     const [viewFitAfterLayout, setViewFitAfterLayout] = useState(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(props.args['nodes']);
     const [edges, setEdges, onEdgesChange] = useEdgesState(props.args['edges']);
-    
+
     const [paneContextMenu, setPaneContextMenu] = useState(null);
     const [nodeContextMenu, setNodeContextMenu] = useState(null);
     const [edgeContextMenu, setEdgeContextMenu] = useState(null);
@@ -166,7 +166,7 @@ const ReactFlowComponent = (props) => {
         if (props.args['getEdgeOnClick'])
             handleDataReturnToStreamlit(edge.id, nodes, edges);
     }
-    
+
     const onNodeDragStart = (event, node) => {
         setPaneContextMenu(null);
         setNodeContextMenu(null);
@@ -209,13 +209,14 @@ const ReactFlowComponent = (props) => {
                 zoomOnDoubleClick={props.args['allowZoom']}
                 zoomOnScroll={props.args['allowZoom']}
                 zoomOnPinch={props.args['allowZoom']}
+                minZoom={props.args['minZoom']}
                 proOptions={{hideAttribution: props.args['hideWatermark']}}>
                 <Background/>
                 {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} nodes={nodes} edges={edges} setNodes={setNodes} layoutOptions={props.args['layoutOptions']} theme={props.theme}/>}
                 {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} edges={edges}/>}
                 {edgeContextMenu && <EdgeContextMenu edgeContextMenu={edgeContextMenu} setEdgeContextMenu={setEdgeContextMenu} setEdges={setEdges} theme={props.theme}/>}
                 {props.args["showControls"] && <Controls/>}
-                {props.args["showMiniMap"] && <MiniMap/>}
+                {props.args["showMiniMap"] && <MiniMap pannable zoomable/>}
         </ReactFlow>
     </div>
     );

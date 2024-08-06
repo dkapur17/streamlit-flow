@@ -38,10 +38,11 @@ class LayeredLayout(Layout):
                     'elk.algorithm': "layered",
                     'elk.direction': self.direction.upper(),
                     'elk.spacing.nodeNode': self.node_node_spacing,
-                    'elk.layered.spacing.nodeNodeBetweenLayers': self.node_layer_spacing
+                    'elk.layered.spacing.nodeNodeBetweenLayers': self.node_layer_spacing,
+                    'elk.layered.considerModelOrder.strategy': "NODES_AND_EDGES"
                 }
         }
-    
+
 class TreeLayout(Layout):
 
     def __init__(self, direction:str, horizontal_spacing:float=150, vertical_spacing:float=75, node_node_spacing:float=75) -> None:
@@ -78,7 +79,7 @@ class RadialLayout(Layout):
                     'elk.spacing.nodeNode': self.node_node_spacing,
                 }
         }
-    
+
 class ForceLayout(Layout):
 
     def __init__(self, horizontal_spacing:float=150, vertical_spacing:float=75, node_node_spacing:float=75) -> None:
@@ -95,7 +96,7 @@ class ForceLayout(Layout):
                     'elk.spacing.nodeNode': self.node_node_spacing,
                 }
         }
-    
+
 
 class StressLayout(Layout):
 
@@ -113,7 +114,7 @@ class StressLayout(Layout):
                     'elk.spacing.nodeNode': self.node_node_spacing,
                 }
         }
-    
+
 class RandomLayout(Layout):
 
     def __init__(self, horizontal_spacing:float=150, vertical_spacing:float=75, node_node_spacing:float=75) -> None:

@@ -4,8 +4,8 @@ T_StreamlitFlowNode = TypeVar('T_StreamlitFlowNode', bound='StreamlitFlowNode')
 T_StreamlitFlowEdge = TypeVar('T_StreamlitFlowEdge', bound='StreamlitFlowEdge')
 
 class StreamlitFlowNode:
-    def __init__(self, 
-                    id:str, 
+    def __init__(self,
+                    id:str,
                     pos: Tuple[float, float],
                     data:Dict[str, any],
                     node_type:str="default",
@@ -25,7 +25,7 @@ class StreamlitFlowNode:
                     focusable:bool=True,
                     style:Dict[str, any]={},
                     **kwargs) -> None:
-        
+
         self.id = id
         self.position = {"x": pos[0], "y": pos[1]}
         self.data = data
@@ -47,9 +47,9 @@ class StreamlitFlowNode:
         self.kwargs = kwargs
 
         if self.width is None:
-            self.width = 200
-
-        self.style = {**style, 'width': self.width, 'height': self.height}
+            self.style = {**style, 'width': 'auto', 'height': 'auto'}
+        else:
+            self.style = {**style, 'width': self.width, 'height': self.height}
 
         # Remove post V1.3.0
         if 'label' in self.data:
@@ -62,7 +62,7 @@ class StreamlitFlowNode:
     def from_dict(cls: Type[T_StreamlitFlowNode], node_dict:Dict[str, any]) -> T_StreamlitFlowNode:
 
         other_attributes_dict = {key: value for key, value in node_dict.items() if key not in ['id', 'position', 'data', 'type', 'sourcePosition', 'targetPosition', 'hidden', 'selected', 'dragging', 'draggable', 'selectable', 'connectable', 'resizing', 'deletable', 'width', 'height', 'zIndex', 'focusable', 'style']}
-        
+
         return cls( id=node_dict.get('id', ''),
                     pos=(node_dict['position'].get('x', 0), node_dict['position'].get('y', 0)),
                     data=node_dict.get('data', {}),
@@ -136,7 +136,7 @@ class StreamlitFlowEdge:
                     label_bg_style:Dict[str, any]={},
                     style:Dict[str, any]={},
                     **kwargs) -> None:
-        
+
         self.id = id
         self.source = source
         self.target = target
@@ -158,7 +158,7 @@ class StreamlitFlowEdge:
 
     @classmethod
     def from_dict(cls: Type[T_StreamlitFlowEdge], edge_dict:Dict[str, any]) -> T_StreamlitFlowEdge:
-        
+
         other_attributes_dict = {key: value for key, value in edge_dict.items() if key not in ['id', 'source', 'target', 'type', 'hidden', 'animated', 'selected', 'deletable', 'focusable', 'zIndex', 'label', 'labelStyle', 'labelShowBg', 'labelBgStyle', 'style']}
         return cls( id=edge_dict.get('id', ''),
                     source=edge_dict.get('source', ''),
