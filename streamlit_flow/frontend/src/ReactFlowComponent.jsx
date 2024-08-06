@@ -209,6 +209,7 @@ const ReactFlowComponent = (props) => {
                 zoomOnDoubleClick={props.args['allowZoom']}
                 zoomOnScroll={props.args['allowZoom']}
                 zoomOnPinch={props.args['allowZoom']}
+                minZoom={props.args['minZoom']}
                 proOptions={{hideAttribution: props.args['hideWatermark']}}>
                 <Background/>
                 {paneContextMenu && <PaneConextMenu paneContextMenu={paneContextMenu} setPaneContextMenu={setPaneContextMenu} nodes={nodes} edges={edges} setNodes={setNodes} layoutOptions={props.args['layoutOptions']} theme={props.theme}/>}
