@@ -215,7 +215,7 @@ const ReactFlowComponent = (props) => {
                 {nodeContextMenu && <NodeContextMenu nodeContextMenu={nodeContextMenu} setNodeContextMenu={setNodeContextMenu} setNodes={setNodes} theme={props.theme} edges={edges}/>}
                 {edgeContextMenu && <EdgeContextMenu edgeContextMenu={edgeContextMenu} setEdgeContextMenu={setEdgeContextMenu} setEdges={setEdges} theme={props.theme}/>}
                 {props.args["showControls"] && <Controls/>}
-                {props.args["showMiniMap"] && <MiniMap/>}
+                {props.args["showMiniMap"] && <MiniMap pannable zoomable/>}
         </ReactFlow>
     </div>
     );
