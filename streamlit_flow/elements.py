@@ -47,9 +47,9 @@ class StreamlitFlowNode:
         self.kwargs = kwargs
 
         if self.width is None:
-            self.width = 200
-
-        self.style = {**style, 'width': self.width, 'height': self.height}
+            self.style = {**style, 'width': 'auto', 'height': 'auto'}
+        else:
+            self.style = {**style, 'width': self.width, 'height': self.height}
 
         # Remove post V1.3.0
         if 'label' in self.data:
