@@ -7,7 +7,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setModalClosing, setNodes, edges}) => {
+const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setModalClosing, setNodes, nodes, edges, handleDataReturnToStreamlit}) => {
 
     const [editedNode, setEditedNode] = useState(node);
     const [allowTypeChange, setAllowTypeChange] = useState(edges.filter(edge => edge.source === editedNode.id || edge.target === editedNode.id).length === 0);
@@ -52,7 +52,9 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
 
 
     const handleSaveChanges = (e) => {
-        setNodes((nodes) => nodes.map(n => n.id === editedNode.id ? editedNode : n));
+        const updatedNodes = nodes.map(n => n.id === editedNode.id ? editedNode : n);
+        setNodes(updatedNodes);
+        handleDataReturnToStreamlit(updatedNodes, edges, null);
         setNodeContextMenu(null);
     };
 
@@ -130,7 +132,7 @@ const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setM
     </Modal>);
 };
 
-const NodeContextMenu = ({nodeContextMenu, setNodeContextMenu, setNodes, theme, edges}) => {
+const NodeContextMenu = ({nodeContextMenu, nodes, edges, setNodeContextMenu, setNodes, setEdges, theme, handleDataReturnToStreamlit}) => {
     
     const [showModal, setShowModal] = useState(false);
     const [modalClosing, setModalClosing] = useState(false);
@@ -148,7 +150,13 @@ const NodeContextMenu = ({nodeContextMenu, setNodeContextMenu, setNodes, theme, 
 
     const handleDeleteNode = (e) => {
         if(nodeContextMenu.node.deletable)
-            setNodes((nodes) => nodes.filter(node => node.id !== nodeContextMenu.node.id));
+        {
+            const updatedNodes = nodes.filter(node => node.id !== nodeContextMenu.node.id)
+            const updatedEdges = edges.filter(edge => edge.source !== nodeContextMenu.node.id && edge.target !== nodeContextMenu.node.id)
+            setNodes(updatedNodes);
+            setEdges(updatedEdges);
+            handleDataReturnToStreamlit(updatedNodes, updatedEdges, null);
+        }
         setNodeContextMenu(null);
     }
 
@@ -169,12 +177,15 @@ const NodeContextMenu = ({nodeContextMenu, setNodeContextMenu, setNodes, theme, 
             </div>
             <EditNodeModal show={showModal}
                 node={nodeContextMenu.node}
+                nodes={nodes}
+                edges={edges}
                 handleClose={handleClose}
                 theme={theme.base}
                 setNodeContextMenu={setNodeContextMenu}
                 setModalClosing={setModalClosing}
                 setNodes={setNodes}
-                edges={edges}/>    
+                handleDataReturnToStreamlit={handleDataReturnToStreamlit}
+                />    
         </>
     );
 };

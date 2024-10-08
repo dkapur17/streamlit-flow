@@ -61,7 +61,7 @@ class StreamlitFlowNode:
     @classmethod
     def from_dict(cls: Type[T_StreamlitFlowNode], node_dict:Dict[str, any]) -> T_StreamlitFlowNode:
 
-        other_attributes_dict = {key: value for key, value in node_dict.items() if key not in ['id', 'position', 'data', 'type', 'sourcePosition', 'targetPosition', 'hidden', 'selected', 'dragging', 'draggable', 'selectable', 'connectable', 'resizing', 'deletable', 'width', 'height', 'zIndex', 'focusable', 'style']}
+        # other_attributes_dict = {key: value for key, value in node_dict.items() if key not in ['id', 'position', 'data', 'type', 'sourcePosition', 'targetPosition', 'hidden', 'selected', 'dragging', 'draggable', 'selectable', 'connectable', 'resizing', 'deletable', 'width', 'height', 'zIndex', 'focusable', 'style']}
 
         return cls( id=node_dict.get('id', ''),
                     pos=(node_dict['position'].get('x', 0), node_dict['position'].get('y', 0)),
@@ -81,8 +81,7 @@ class StreamlitFlowNode:
                     height=node_dict.get('height', None),
                     z_index=node_dict.get('zIndex', 0),
                     focusable=node_dict.get('focusable', True),
-                    style=node_dict.get('style', {}),
-                    **other_attributes_dict)
+                    style=node_dict.get('style', {}))
 
 
     def __validate__(self):
@@ -91,7 +90,7 @@ class StreamlitFlowNode:
         assert self.target_position in ['top', 'bottom', 'left', 'right'], f"Target position must be one of ['top', 'bottom', 'left', 'right']. Got {self.target_position}"
 
 
-    def __to_dict__(self) -> Dict[str, any]:
+    def asdict(self) -> Dict[str, any]:
         node_dict = {
             "id": self.id,
             "position": self.position,
@@ -115,6 +114,9 @@ class StreamlitFlowNode:
         }
         node_dict.update(self.kwargs)
         return node_dict
+
+    def __repr__(self):
+        return f"StreamlitFlowNode({self.id}, ({round(self.position['x'], 2)}, {round(self.position['y'],2)}), '{self.data.get('content', '')}')"
 
 
 class StreamlitFlowEdge:
@@ -159,7 +161,7 @@ class StreamlitFlowEdge:
     @classmethod
     def from_dict(cls: Type[T_StreamlitFlowEdge], edge_dict:Dict[str, any]) -> T_StreamlitFlowEdge:
 
-        other_attributes_dict = {key: value for key, value in edge_dict.items() if key not in ['id', 'source', 'target', 'type', 'hidden', 'animated', 'selected', 'deletable', 'focusable', 'zIndex', 'label', 'labelStyle', 'labelShowBg', 'labelBgStyle', 'style']}
+        # other_attributes_dict = {key: value for key, value in edge_dict.items() if key not in ['id', 'source', 'target', 'type', 'hidden', 'animated', 'selected', 'deletable', 'focusable', 'zIndex', 'label', 'labelStyle', 'labelShowBg', 'labelBgStyle', 'style']}
         return cls( id=edge_dict.get('id', ''),
                     source=edge_dict.get('source', ''),
                     target=edge_dict.get('target', ''),
@@ -174,15 +176,14 @@ class StreamlitFlowEdge:
                     label_style=edge_dict.get('labelStyle', {}),
                     label_show_bg=edge_dict.get('labelShowBg', False),
                     label_bg_style=edge_dict.get('labelBgStyle', {}),
-                    style=edge_dict.get('style', {}),
-                    **other_attributes_dict)
+                    style=edge_dict.get('style', {}))
 
 
     def __validate__(self) -> None:
         assert self.type in ['default', 'straight', 'step', "smoothstep", "simplebezier"], f"Edge type must be one of ['default', 'straight', 'step', 'smoothstep', 'simplebezier']. Got {self.type}"
 
 
-    def __to_dict__(self) -> Dict[str, any]:
+    def asdict(self) -> Dict[str, any]:
         edge_dict = {
             "id": self.id,
             "source": self.source,
@@ -203,3 +204,6 @@ class StreamlitFlowEdge:
 
         edge_dict.update(self.kwargs)
         return edge_dict
+
+    def __repr__(self):
+        return f"StreamlitFlowEdge({self.id}, {self.source}->{self.target}, '{self.label}')"
