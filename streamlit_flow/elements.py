@@ -19,12 +19,15 @@ class StreamlitFlowNode:
                     connectable:bool=False,
                     resizing:bool=False,
                     deletable:bool=False,
-                    width:Union[float, None]=None,
-                    height:Union[float, None]=None,
                     z_index:float=0,
                     focusable:bool=True,
                     style:Dict[str, any]={},
                     **kwargs) -> None:
+
+        if 'width' not in style:
+            style['width'] = 'auto'
+        if 'height' not in style:
+            style['height'] = 'auto'
 
         self.id = id
         self.position = {"x": pos[0], "y": pos[1]}
@@ -40,16 +43,10 @@ class StreamlitFlowNode:
         self.connectable = connectable
         self.resizing = resizing
         self.deletable = deletable
-        self.width = width
-        self.height = height
         self.z_index = z_index
         self.focusable = focusable
+        self.style = style
         self.kwargs = kwargs
-
-        if self.width is None:
-            self.style = {**style, 'width': 'auto', 'height': 'auto'}
-        else:
-            self.style = {**style, 'width': self.width, 'height': self.height}
 
         # Remove post V1.3.0
         if 'label' in self.data:
@@ -77,8 +74,6 @@ class StreamlitFlowNode:
                     connectable=node_dict.get('connectable', True),
                     resizing=node_dict.get('resizing', False),
                     deletable=node_dict.get('deletable', False),
-                    width=node_dict.get('width', None),
-                    height=node_dict.get('height', None),
                     z_index=node_dict.get('zIndex', 0),
                     focusable=node_dict.get('focusable', True),
                     style=node_dict.get('style', {}))
@@ -106,8 +101,6 @@ class StreamlitFlowNode:
             "connectable": self.connectable,
             "resizing": self.resizing,
             "deletable": self.deletable,
-            "width": self.width,
-            "height": self.height,
             "zIndex": self.z_index,
             "focusable": self.focusable,
             "style": self.style,
