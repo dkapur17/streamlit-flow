@@ -22,7 +22,7 @@ Say hello to the new and improved state management system that syncs the states 
 **Old**
 ```python
 from streamlit_flow import streamlit_flow
-from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge,
+from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
 
 nodes = [...]
 edges = [...]
@@ -85,7 +85,7 @@ st.session_state.flow_state = streamlit_flow('flow', st.session_state.flow_state
 - Easy to use Layouts - Layered, Tree, Force, Stress, Radial, Random, and Manual.
 - Markdown Support in Nodes.
 - Interactions with Streamlit - clicks on nodes and edges can be captured in Streamlit.
-- Synchronized state management - changing the flow state in Python or from user interaction in the frontent will reflect in both the frontend and the backend.
+- Synchronized state management - changes to the state of the flow can be made seamlessly from the UI through user interactions as well as programmatically in Python, and the changes reflect on the UI without any state modification wizardry.
 
 
 A demo for all these features can be found [here](https://stflow.streamlit.app).
