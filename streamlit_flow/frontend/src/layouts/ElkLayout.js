@@ -8,8 +8,6 @@ const createElkGraphLayout = async (graphNodes, graphEdges, options) => {
     })
 
     const nodes = [...graphNodes]
-    console.log(nodes);
-    
     const edges = [...graphEdges]
 
 

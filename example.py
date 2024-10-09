@@ -19,7 +19,7 @@ if 'curr_state' not in st.session_state:
 			# StreamlitFlowNode("7", (4, 0), {'content': 'Node 7'}, 'output', target_position='left'),
 			]
 
-	edges = [StreamlitFlowEdge("1-2", "1", "2", animated=True),
+	edges = [StreamlitFlowEdge("1-2", "1", "2", animated=True, marker_start={}, marker_end={'type': 'arrow'}),
 			StreamlitFlowEdge("1-3", "1", "3", animated=True),
 			# StreamlitFlowEdge("2-4", "2", "4", animated=True),
 			# StreamlitFlowEdge("2-5", "2", "5", animated=True),
@@ -35,6 +35,8 @@ if st.button("Add node"):
 	st.session_state.curr_state.nodes.append(new_node)
 	st.rerun()
 
+
+
 st.session_state.curr_state = streamlit_flow('example_flow', 
 								st.session_state.curr_state, 
 								layout=TreeLayout(direction='right'), 
@@ -49,6 +51,7 @@ st.session_state.curr_state = streamlit_flow('example_flow',
 								hide_watermark=True, 
 								allow_new_edges=True,
 								min_zoom=0.1)
+
 
 col1, col2, col3 = st.columns(3)
 

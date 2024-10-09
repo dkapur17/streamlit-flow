@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 import Modal from 'react-bootstrap/Modal';
@@ -10,7 +10,7 @@ import Col from 'react-bootstrap/Col';
 const EditNodeModal = ({show, node, handleClose, theme, setNodeContextMenu, setModalClosing, setNodes, nodes, edges, handleDataReturnToStreamlit}) => {
 
     const [editedNode, setEditedNode] = useState(node);
-    const [allowTypeChange, setAllowTypeChange] = useState(edges.filter(edge => edge.source === editedNode.id || edge.target === editedNode.id).length === 0);
+    const allowTypeChange = edges.filter(edge => edge.source === editedNode.id || edge.target === editedNode.id).length === 0;
     
     const onExited = (e) => {
         setModalClosing(true);

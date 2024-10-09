@@ -114,11 +114,14 @@ class StreamlitFlowNode:
 
 class StreamlitFlowEdge:
 
+
     def __init__(self,
                     id:str,
                     source:str,
                     target:str,
                     edge_type:str="default",
+                    marker_start:dict={},
+                    marker_end:dict={},
                     hidden:bool=False,
                     animated:bool=False,
                     selected:bool=False,
@@ -136,6 +139,8 @@ class StreamlitFlowEdge:
         self.source = source
         self.target = target
         self.type = edge_type
+        self.marker_start = marker_start
+        self.marker_end = marker_end
         self.hidden = hidden
         self.animated = animated
         self.selected = selected
@@ -159,6 +164,8 @@ class StreamlitFlowEdge:
                     source=edge_dict.get('source', ''),
                     target=edge_dict.get('target', ''),
                     edge_type=edge_dict.get('type', 'default'),
+                    marker_start=edge_dict.get('markerStart', {}),
+                    marker_end=edge_dict.get('markerEnd', {}),
                     hidden=edge_dict.get('hidden', False),
                     animated=edge_dict.get('animated', False),
                     selected=edge_dict.get('selected', False),
@@ -182,6 +189,8 @@ class StreamlitFlowEdge:
             "source": self.source,
             "target": self.target,
             "type": self.type,
+            "markerStart": self.marker_start,
+            "markerEnd": self.marker_end,
             "hidden": self.hidden,
             "animated": self.animated,
             "selected": self.selected,

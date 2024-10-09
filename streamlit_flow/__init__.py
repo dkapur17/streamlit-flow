@@ -1,10 +1,6 @@
 import os
 import streamlit.components.v1 as components
-import streamlit as st
 
-from typing import List
-
-from time import time
 
 from .elements import StreamlitFlowNode, StreamlitFlowEdge
 from .layouts import Layout, ManualLayout
@@ -47,7 +43,6 @@ def streamlit_flow(key:str,
     nodes = [node.asdict() for node in state.nodes]
     edges = [edge.asdict() for edge  in state.edges]
 
-
     component_value = _st_flow_func(  nodes=nodes,
                                         edges=edges,
                                         height=height,
@@ -70,7 +65,6 @@ def streamlit_flow(key:str,
                                         key=key,
                                         timestamp=state.timestamp)
     
-    print(component_value)
     
     if component_value is None:
         return state

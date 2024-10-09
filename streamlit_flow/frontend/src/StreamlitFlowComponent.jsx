@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, useMemo } from "react"
+import React, { useRef, useEffect, useState, useMemo } from "react"
 import {
     Streamlit,
 } from "streamlit-component-lib"
@@ -28,31 +28,13 @@ import EdgeContextMenu from "./components/EdgeContextMenu";
 
 import createElkGraphLayout from "./layouts/ElkLayout";
 
-// When to return state to streamlit - done
-// 0. When layout is recalculated - done
-// 1. When a node is clicked - done
-// 2. When an edge is clicked - done
-// 3. When a node is moved - done
-// 4. When a new edge is created - done
-// 5. When a node is created - done
-// 6. When a node is deleted - done (also updates the corresponding edges)
-// 7. When an edge is deleted
-// 8. When a node is edited - done
-// 9. When an edge is edited
-
-// When to calculate layout
-// 1. On first load - nodes initialized + !initialLayoutCalculated - done
-// 2. On reset layout - resetLayout - done
-// 3. On layout change - layoutOptions - not possible yet
-
-
 const StreamlitFlowComponent = (props) => {
 
     const nodeTypes = useMemo(() => ({ input: MarkdownInputNode, output: MarkdownOutputNode, default: MarkdownDefaultNode}), [])
     
     const [viewFitAfterLayout, setViewFitAfterLayout] = useState(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState(props.args['nodes']);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(props.args['edges']);
+    const [nodes, setNodes, onNodesChange] = useNodesState(props.args.nodes);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(props.args.edges);
     const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState((new Date()).getTime());
 
     const [layoutCalculated, setLayoutCalculated] = useState(false);
@@ -115,7 +97,7 @@ const StreamlitFlowComponent = (props) => {
 
     // Update elements if streamlit sends new arguments - check by comparing timestamp recency
     useEffect(() => {
-        if (lastUpdateTimestamp == props.args.timestamp)
+        if (lastUpdateTimestamp === props.args.timestamp)
         {
             setNodes(props.args.nodes);
             setEdges(props.args.edges);
