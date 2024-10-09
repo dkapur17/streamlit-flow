@@ -1,16 +1,40 @@
-from typing import Dict, Tuple, Union, Type, TypeVar
+from typing import Dict, Tuple, Union, Type, TypeVar, Literal
 
 T_StreamlitFlowNode = TypeVar('T_StreamlitFlowNode', bound='StreamlitFlowNode')
 T_StreamlitFlowEdge = TypeVar('T_StreamlitFlowEdge', bound='StreamlitFlowEdge')
 
 class StreamlitFlowNode:
+
+    """
+    Represents a node in streamlit_flow
+
+    Arguments
+    - **id** : str : Unique identifier for the node
+    - **pos** : Tuple[float, float] : Position of the node in the canvas
+    - **data** : Dict[str, any] : Arbitrary data to save in the node. Use {'content': 'Node content'} to set the content of the node
+    - **node_type** : str : Type of the node. One of ['default', 'input', 'output']
+    - **source_position** : str : Position of the source anchor. One of ['top', 'bottom', 'left', 'right']
+    - **target_position** : str : Position of the target anchor. One of ['top', 'bottom', 'left', 'right']
+    - **hidden** : bool : Whether the node is hidden
+    - **selected** : bool : Whether the node is selected
+    - **dragging** : bool : Whether the node is being dragged (?)
+    - **draggable** : bool : Whether the node is draggable
+    - **selectable** : bool : Whether the node is selectable
+    - **connectable** : bool : Whether the node is connectable
+    - **resizing** : bool : Whether the node is resizable
+    - **deletable** : bool : Whether the node is deletable
+    - **z_index** : float : Z-index of the node
+    - **focusable** : bool : Whether the node is focusable
+    - **style** : Dict[str, any] : CSS style of the node
+    """
+
     def __init__(self,
                     id:str,
                     pos: Tuple[float, float],
                     data:Dict[str, any],
-                    node_type:str="default",
-                    source_position:str='bottom',
-                    target_position:str='top',
+                    node_type:Literal['default', 'input', 'output'] = 'default',
+                    source_position:Literal['bottom', 'top', 'left', 'right'] = 'bottom',
+                    target_position:Literal['bottom', 'top', 'left', 'right'] = 'top',
                     hidden:bool=False,
                     selected:bool=False,
                     dragging:bool=False,
@@ -114,12 +138,34 @@ class StreamlitFlowNode:
 
 class StreamlitFlowEdge:
 
+    """
+    Represents an edge in streamlit_flow
+
+    Arguments
+    - **id** : str : Unique identifier for the edge
+    - **source** : str : ID of the source node
+    - **target** : str : ID of the target node
+    - **edge_type** : str : Type of the edge. One of ['default', 'straight', 'step', "smoothstep", "simplebezier"]
+    - **marker_start** : dict : Marker at the start of the edge. Eg: {'type': 'arrow'/'arrowclosed'}
+    - **marker_end** : dict : Marker at the end of the edge. Eg: {'type': 'arrow'/'arrowclosed'}
+    - **hidden** : bool : Whether the edge is hidden
+    - **animated** : bool : Whether the edge is animated
+    - **selected** : bool : Whether the edge is selected
+    - **deletable** : bool : Whether the edge is deletable
+    - **focusable** : bool : Whether the edge is focusable
+    - **z_index** : float : Z-index of the edge
+    - **label** : str : Label of the edge
+    - **label_style** : Dict[str, any] : CSS style of the label
+    - **label_show_bg** : bool : Whether to show background for the label
+    - **label_bg_style** : Dict[str, any] : CSS style of the label background
+    - **style** : Dict[str, any] : CSS style of the edge
+    """
 
     def __init__(self,
                     id:str,
                     source:str,
                     target:str,
-                    edge_type:str="default",
+                    edge_type:Literal['default', 'straight', 'step', "smoothstep", "simplebezier"]="default",
                     marker_start:dict={},
                     marker_end:dict={},
                     hidden:bool=False,

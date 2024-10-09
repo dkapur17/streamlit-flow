@@ -4,6 +4,16 @@ from typing import List
 
 @dataclass
 class StreamlitFlowState:
+    """
+    Container to maintain the state of the flowchart component.
+
+    Arguments
+    - **nodes** : List[StreamlitFlowNode] : The list of nodes in the flowchart.
+    - **edges** : List[StreamlitFlowEdge] : The list of edges in the flowchart.
+    - **selected_id** : str? : The id of the selected node.
+    - **timestamp** : float? : The timestamp of the state.
+    """
+
     nodes: List[StreamlitFlowNode]
     edges: List[StreamlitFlowEdge]
     selected_id: str = None

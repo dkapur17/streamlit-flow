@@ -20,6 +20,7 @@ else:
     _st_flow_func = components.declare_component("streamlit_flow", path=build_dir)
 
 
+
 def streamlit_flow(key:str,
                     state:StreamlitFlowState,
                     height:int=500,
@@ -39,6 +40,31 @@ def streamlit_flow(key:str,
                     enable_node_menu:bool=False,
                     enable_edge_menu:bool=False,
                     hide_watermark:bool=False):
+    
+    """
+    The main function to render the flowchart component in Streamlit.
+    
+    Arguments
+    - **key** : str : A unique identifier for the component.
+    - **state** : StreamlitFlowState : The current state of the flowchart component.
+    - **height** : int : The height of the component in pixels.
+    - **fit_view** : bool : Whether to fit the view of the component.
+    - **show_controls** : bool : Whether to show the controls of the component.
+    - **show_minimap** : bool : Whether to show the minimap of the component.
+    - **allow_new_edges** : bool : Whether to allow new edges to be created.
+    - **animate_new_edges** : bool : Whether to animate new edges created on the canvas.
+    - **style** : dict : CSS style of the component.
+    - **layout** : Layout : The layout of the nodes in the component.
+    - **get_node_on_click** : bool : Whether to get the node on click.
+    - **get_edge_on_click** : bool : Whether to get the edge on click.
+    - **pan_on_drag** : bool : Whether to pan on drag.
+    - **allow_zoom** : bool : Whether to allow zoom.
+    - **min_zoom** : float : The minimum zoom level.
+    - **enable_pane_menu** : bool : Whether to enable the pane menu.
+    - **enable_node_menu** : bool : Whether to enable the node menu.
+    - **enable_edge_menu** : bool : Whether to enable the edge menu.
+    - **hide_watermark** : bool : Whether to hide the watermark.
+    """
 
     nodes = [node.asdict() for node in state.nodes]
     edges = [edge.asdict() for edge  in state.edges]
