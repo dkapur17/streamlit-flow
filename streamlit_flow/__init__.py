@@ -89,7 +89,8 @@ def streamlit_flow(key:str,
                                         enableEdgeMenu=enable_edge_menu,
                                         hideWatermark=hide_watermark,
                                         key=key,
-                                        timestamp=state.timestamp)
+                                        timestamp=state.timestamp,
+                                        component='streamlit_flow')
     
     
     if component_value is None:
