@@ -69,7 +69,6 @@ def streamlit_flow(key:str,
     nodes = [node.asdict() for node in state.nodes]
     edges = [edge.asdict() for edge  in state.edges]
 
-    print(len(edges))
     component_value = _st_flow_func(  nodes=nodes,
                                         edges=edges,
                                         height=height,
