@@ -6,18 +6,76 @@
 
 **Build beautiful, interactive flow diagrams: Powered by React Flow, Simplified by Streamlit.**
 
-### 🎉 Version 1.2.9 is out now! 🎉
-
-Introducing **Markdown Support in Nodes**! Now you are no longer limited to having text in your nodes. Use the features offered by Markdown and HTML to spice up your nodes.
-
 ![Markdown Support in Node](assets/MarkdownNode.png)
 
-*The `label` attribute on the `data` property of `SteamlitFlowNode` has been replaced by the `content` attribute, which accepts as input a string that can be either plain text, markdown, or raw HTML. For extened support, the `label` attribute still works, but is internally reassigned to the `content` attribute, but `label` will be depricated in the next release.*
+### 🎉 Version 1.5.0 is out now! 🎉
 
-##### Minor Changes
+> [!WARNING] 
+>
+> StreamlitFlow v1.5.0 has breaking changes. Please read on to understand how to migrate your code to the new version.
 
-- Can optionally hide the `ReactFlow` watermark on the canvas.
 
+Say hello to the new and improved state management system that syncs the states between changes in the frontend and the backend. This means that you can now modify the state of the flow diagram from Python and see the changes reflected in the frontend without having to hack into the component's state.
+
+**Note**: The updated state management uses a new `StreamlitFlowState` class to manage the state within streamlit. Instead of taking `nodes` and `edges` as arguments, the `streamlit_flow` function now takes a single `StreamlitFlowState` object. This means that code using earlier versions of this library will need to be tweaked slightly to work with the new version.
+
+**Old**
+```python
+from streamlit_flow import streamlit_flow
+from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
+
+nodes = [...]
+edges = [...]
+
+streamlit_flow('flow', nodes, edges)
+```
+
+**New**
+```python
+from streamlit_flow import streamlit_flow
+from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
+from streamlit_flow.state import StreamlitFlowState
+
+nodes = [...]
+edges = [...]
+state = StreamlitFlowState(nodes, edges)
+
+streamlit_flow('flow', state)
+```
+
+The benefits we get from this are significant, as the `StreamlitFlowState` class makes sure that the states in the frontend and the backend are synced wth the latest changes from either side.
+
+**Example**
+```python
+from streamlit_flow import streamlit_flow
+from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
+from streamlit_flow.state import StreamlitFlowState
+from uuid import uuid4
+
+# Initialize the state if it doesn't exist
+if 'flow_state' not in st.session_state:
+    nodes = [...]
+    edges = [...]
+    st.session_state.flow_state = StreamlitFlowState(nodes, edges)
+
+# Use any operation that alters the state, for example add node, and then rerun
+if st.button("Add node"):
+    new_node = StreamlitFlowNode(key=str(f"st-flow-node_{uuid4()}"), 
+                                pos=(0, 0), 
+                                data={'content': f'Node {len(st.session_state.curr_state.nodes) + 1}'}, 
+                                node_type='default', 
+                                source_position='right', 
+                                target_position='left')
+    st.session_state.curr_state.nodes.append(new_node)
+    st.rerun()
+
+# Use the state as the argument, as well as to store the return value
+st.session_state.flow_state = streamlit_flow('flow', st.session_state.flow_state)
+```
+### Minor Updates
+- **More Robust Returns**: The `streamlit_flow` component now returns the updated state on several user interactions, such as creating/deleting/editing/moving a node or an edge, to make sure the states stay synced.
+- **Edge Markers**: Ends of the edges can now be set to `arrow` or `arrowclosed` to represent directed edges, as well as further styled. Check out the style options [here](https://reactflow.dev/api-reference/types/edge-marker).
+- **Unified node dimensions**: Streamlit flow now only sets the dimensions of the nodes in the `style` dictionary, and let Reactflow handle computing the dimensions. This means that the `width` and `height` attributes of the nodes are now deprecated.
 
 ## Features
 
@@ -27,6 +85,7 @@ Introducing **Markdown Support in Nodes**! Now you are no longer limited to havi
 - Easy to use Layouts - Layered, Tree, Force, Stress, Radial, Random, and Manual.
 - Markdown Support in Nodes.
 - Interactions with Streamlit - clicks on nodes and edges can be captured in Streamlit.
+- Synchronized state management - changes to the state of the flow can be made seamlessly from the UI through user interactions as well as programmatically in Python, and the changes reflect on the UI without any state modification wizardry.
 
 
 A demo for all these features can be found [here](https://stflow.streamlit.app).
@@ -61,6 +120,10 @@ streamlit run example.py
 ```
 
 ## Change log
+
+### Version 1.2.9
+
+* **Markdown Nodes**: Use Markdown and HTML in the nodes to make them more expressive.
 
 ### Version 1.0.0
 

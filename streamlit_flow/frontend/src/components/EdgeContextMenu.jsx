@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 
-const EditEdgeModal = ({show, edge, handleClose, theme, setEdgeContextMenu, setModalClosing, setEdges}) => {
+const EditEdgeModal = ({show, edge, nodes, edges, handleClose, theme, setEdgeContextMenu, setModalClosing, setEdges, handleDataReturnToStreamlit}) => {
 
     const [editedEdge, setEditedEdge] = useState(edge);
     
@@ -38,7 +38,9 @@ const EditEdgeModal = ({show, edge, handleClose, theme, setEdgeContextMenu, setM
     }
 
     const handleSaveChanges = (e) => {
-        setEdges((edges) => edges.map(ed => ed.id === editedEdge.id ? {...editedEdge} : ed));
+        const updatedEdges = edges.map(ed => ed.id === editedEdge.id ? editedEdge : ed);
+        setEdges(updatedEdges);
+        handleDataReturnToStreamlit(nodes, updatedEdges, null);
         setEdgeContextMenu(null);
     };
 
@@ -87,7 +89,7 @@ const EditEdgeModal = ({show, edge, handleClose, theme, setEdgeContextMenu, setM
 
 }
 
-const EdgeContextMenu = ({edgeContextMenu, setEdgeContextMenu, setEdges, theme}) => {
+const EdgeContextMenu = ({edgeContextMenu, nodes, edges, setEdgeContextMenu, setEdges, handleDataReturnToStreamlit, theme}) => {
 
     const [showModal, setShowModal] = useState(false);
     const [modalClosing, setModalClosing] = useState(false);
@@ -105,7 +107,11 @@ const EdgeContextMenu = ({edgeContextMenu, setEdgeContextMenu, setEdges, theme})
 
     const handleDeleteEdge = (e) => {
         if(edgeContextMenu.edge.deletable)
-            setEdges((edges) => edges.filter(edge => edge.id !== edgeContextMenu.edge.id));
+        {
+            const updatedEdges = edges.filter(edge => edge.id !== edgeContextMenu.edge.id);
+            setEdges(updatedEdges);
+            handleDataReturnToStreamlit(nodes, updatedEdges, null);
+        }
         setEdgeContextMenu(null);
     }
 
@@ -126,11 +132,14 @@ const EdgeContextMenu = ({edgeContextMenu, setEdgeContextMenu, setEdges, theme})
         </div>
         <EditEdgeModal show={showModal}
             edge={edgeContextMenu.edge}
+            nodes={nodes}
+            edges={edges}
             handleClose={handleClose}
             theme={theme.base}
             setEdgeContextMenu={setEdgeContextMenu}
             setModalClosing={setModalClosing}
-            setEdges={setEdges}/>
+            setEdges={setEdges}
+            handleDataReturnToStreamlit={handleDataReturnToStreamlit}/>
         </>
     );
 };

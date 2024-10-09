@@ -1,16 +1,40 @@
-from typing import Dict, Tuple, Union, Type, TypeVar
+from typing import Dict, Tuple, Union, Type, TypeVar, Literal
 
 T_StreamlitFlowNode = TypeVar('T_StreamlitFlowNode', bound='StreamlitFlowNode')
 T_StreamlitFlowEdge = TypeVar('T_StreamlitFlowEdge', bound='StreamlitFlowEdge')
 
 class StreamlitFlowNode:
+
+    """
+    Represents a node in streamlit_flow
+
+    Arguments
+    - **id** : str : Unique identifier for the node
+    - **pos** : Tuple[float, float] : Position of the node in the canvas
+    - **data** : Dict[str, any] : Arbitrary data to save in the node. Use {'content': 'Node content'} to set the content of the node
+    - **node_type** : str : Type of the node. One of ['default', 'input', 'output']
+    - **source_position** : str : Position of the source anchor. One of ['top', 'bottom', 'left', 'right']
+    - **target_position** : str : Position of the target anchor. One of ['top', 'bottom', 'left', 'right']
+    - **hidden** : bool : Whether the node is hidden
+    - **selected** : bool : Whether the node is selected
+    - **dragging** : bool : Whether the node is being dragged (?)
+    - **draggable** : bool : Whether the node is draggable
+    - **selectable** : bool : Whether the node is selectable
+    - **connectable** : bool : Whether the node is connectable
+    - **resizing** : bool : Whether the node is resizable
+    - **deletable** : bool : Whether the node is deletable
+    - **z_index** : float : Z-index of the node
+    - **focusable** : bool : Whether the node is focusable
+    - **style** : Dict[str, any] : CSS style of the node
+    """
+
     def __init__(self,
                     id:str,
                     pos: Tuple[float, float],
                     data:Dict[str, any],
-                    node_type:str="default",
-                    source_position:str='bottom',
-                    target_position:str='top',
+                    node_type:Literal['default', 'input', 'output'] = 'default',
+                    source_position:Literal['bottom', 'top', 'left', 'right'] = 'bottom',
+                    target_position:Literal['bottom', 'top', 'left', 'right'] = 'top',
                     hidden:bool=False,
                     selected:bool=False,
                     dragging:bool=False,
@@ -19,12 +43,15 @@ class StreamlitFlowNode:
                     connectable:bool=False,
                     resizing:bool=False,
                     deletable:bool=False,
-                    width:Union[float, None]=None,
-                    height:Union[float, None]=None,
                     z_index:float=0,
                     focusable:bool=True,
                     style:Dict[str, any]={},
                     **kwargs) -> None:
+
+        if 'width' not in style:
+            style['width'] = 'auto'
+        if 'height' not in style:
+            style['height'] = 'auto'
 
         self.id = id
         self.position = {"x": pos[0], "y": pos[1]}
@@ -40,16 +67,10 @@ class StreamlitFlowNode:
         self.connectable = connectable
         self.resizing = resizing
         self.deletable = deletable
-        self.width = width
-        self.height = height
         self.z_index = z_index
         self.focusable = focusable
+        self.style = style
         self.kwargs = kwargs
-
-        if self.width is None:
-            self.style = {**style, 'width': 'auto', 'height': 'auto'}
-        else:
-            self.style = {**style, 'width': self.width, 'height': self.height}
 
         # Remove post V1.3.0
         if 'label' in self.data:
@@ -61,7 +82,7 @@ class StreamlitFlowNode:
     @classmethod
     def from_dict(cls: Type[T_StreamlitFlowNode], node_dict:Dict[str, any]) -> T_StreamlitFlowNode:
 
-        other_attributes_dict = {key: value for key, value in node_dict.items() if key not in ['id', 'position', 'data', 'type', 'sourcePosition', 'targetPosition', 'hidden', 'selected', 'dragging', 'draggable', 'selectable', 'connectable', 'resizing', 'deletable', 'width', 'height', 'zIndex', 'focusable', 'style']}
+        # other_attributes_dict = {key: value for key, value in node_dict.items() if key not in ['id', 'position', 'data', 'type', 'sourcePosition', 'targetPosition', 'hidden', 'selected', 'dragging', 'draggable', 'selectable', 'connectable', 'resizing', 'deletable', 'width', 'height', 'zIndex', 'focusable', 'style']}
 
         return cls( id=node_dict.get('id', ''),
                     pos=(node_dict['position'].get('x', 0), node_dict['position'].get('y', 0)),
@@ -77,12 +98,9 @@ class StreamlitFlowNode:
                     connectable=node_dict.get('connectable', True),
                     resizing=node_dict.get('resizing', False),
                     deletable=node_dict.get('deletable', False),
-                    width=node_dict.get('width', None),
-                    height=node_dict.get('height', None),
                     z_index=node_dict.get('zIndex', 0),
                     focusable=node_dict.get('focusable', True),
-                    style=node_dict.get('style', {}),
-                    **other_attributes_dict)
+                    style=node_dict.get('style', {}))
 
 
     def __validate__(self):
@@ -91,7 +109,7 @@ class StreamlitFlowNode:
         assert self.target_position in ['top', 'bottom', 'left', 'right'], f"Target position must be one of ['top', 'bottom', 'left', 'right']. Got {self.target_position}"
 
 
-    def __to_dict__(self) -> Dict[str, any]:
+    def asdict(self) -> Dict[str, any]:
         node_dict = {
             "id": self.id,
             "position": self.position,
@@ -107,8 +125,6 @@ class StreamlitFlowNode:
             "connectable": self.connectable,
             "resizing": self.resizing,
             "deletable": self.deletable,
-            "width": self.width,
-            "height": self.height,
             "zIndex": self.z_index,
             "focusable": self.focusable,
             "style": self.style,
@@ -116,14 +132,42 @@ class StreamlitFlowNode:
         node_dict.update(self.kwargs)
         return node_dict
 
+    def __repr__(self):
+        return f"StreamlitFlowNode({self.id}, ({round(self.position['x'], 2)}, {round(self.position['y'],2)}), '{self.data.get('content', '')}')"
+
 
 class StreamlitFlowEdge:
+
+    """
+    Represents an edge in streamlit_flow
+
+    Arguments
+    - **id** : str : Unique identifier for the edge
+    - **source** : str : ID of the source node
+    - **target** : str : ID of the target node
+    - **edge_type** : str : Type of the edge. One of ['default', 'straight', 'step', "smoothstep", "simplebezier"]
+    - **marker_start** : dict : Marker at the start of the edge. Eg: {'type': 'arrow'/'arrowclosed'}
+    - **marker_end** : dict : Marker at the end of the edge. Eg: {'type': 'arrow'/'arrowclosed'}
+    - **hidden** : bool : Whether the edge is hidden
+    - **animated** : bool : Whether the edge is animated
+    - **selected** : bool : Whether the edge is selected
+    - **deletable** : bool : Whether the edge is deletable
+    - **focusable** : bool : Whether the edge is focusable
+    - **z_index** : float : Z-index of the edge
+    - **label** : str : Label of the edge
+    - **label_style** : Dict[str, any] : CSS style of the label
+    - **label_show_bg** : bool : Whether to show background for the label
+    - **label_bg_style** : Dict[str, any] : CSS style of the label background
+    - **style** : Dict[str, any] : CSS style of the edge
+    """
 
     def __init__(self,
                     id:str,
                     source:str,
                     target:str,
-                    edge_type:str="default",
+                    edge_type:Literal['default', 'straight', 'step', "smoothstep", "simplebezier"]="default",
+                    marker_start:dict={},
+                    marker_end:dict={},
                     hidden:bool=False,
                     animated:bool=False,
                     selected:bool=False,
@@ -141,6 +185,8 @@ class StreamlitFlowEdge:
         self.source = source
         self.target = target
         self.type = edge_type
+        self.marker_start = marker_start
+        self.marker_end = marker_end
         self.hidden = hidden
         self.animated = animated
         self.selected = selected
@@ -159,11 +205,13 @@ class StreamlitFlowEdge:
     @classmethod
     def from_dict(cls: Type[T_StreamlitFlowEdge], edge_dict:Dict[str, any]) -> T_StreamlitFlowEdge:
 
-        other_attributes_dict = {key: value for key, value in edge_dict.items() if key not in ['id', 'source', 'target', 'type', 'hidden', 'animated', 'selected', 'deletable', 'focusable', 'zIndex', 'label', 'labelStyle', 'labelShowBg', 'labelBgStyle', 'style']}
+        # other_attributes_dict = {key: value for key, value in edge_dict.items() if key not in ['id', 'source', 'target', 'type', 'hidden', 'animated', 'selected', 'deletable', 'focusable', 'zIndex', 'label', 'labelStyle', 'labelShowBg', 'labelBgStyle', 'style']}
         return cls( id=edge_dict.get('id', ''),
                     source=edge_dict.get('source', ''),
                     target=edge_dict.get('target', ''),
                     edge_type=edge_dict.get('type', 'default'),
+                    marker_start=edge_dict.get('markerStart', {}),
+                    marker_end=edge_dict.get('markerEnd', {}),
                     hidden=edge_dict.get('hidden', False),
                     animated=edge_dict.get('animated', False),
                     selected=edge_dict.get('selected', False),
@@ -174,20 +222,21 @@ class StreamlitFlowEdge:
                     label_style=edge_dict.get('labelStyle', {}),
                     label_show_bg=edge_dict.get('labelShowBg', False),
                     label_bg_style=edge_dict.get('labelBgStyle', {}),
-                    style=edge_dict.get('style', {}),
-                    **other_attributes_dict)
+                    style=edge_dict.get('style', {}))
 
 
     def __validate__(self) -> None:
         assert self.type in ['default', 'straight', 'step', "smoothstep", "simplebezier"], f"Edge type must be one of ['default', 'straight', 'step', 'smoothstep', 'simplebezier']. Got {self.type}"
 
 
-    def __to_dict__(self) -> Dict[str, any]:
+    def asdict(self) -> Dict[str, any]:
         edge_dict = {
             "id": self.id,
             "source": self.source,
             "target": self.target,
             "type": self.type,
+            "markerStart": self.marker_start,
+            "markerEnd": self.marker_end,
             "hidden": self.hidden,
             "animated": self.animated,
             "selected": self.selected,
@@ -203,3 +252,6 @@ class StreamlitFlowEdge:
 
         edge_dict.update(self.kwargs)
         return edge_dict
+
+    def __repr__(self):
+        return f"StreamlitFlowEdge({self.id}, {self.source}->{self.target}, '{self.label}')"
