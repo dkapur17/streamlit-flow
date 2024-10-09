@@ -97,13 +97,16 @@ const StreamlitFlowComponent = (props) => {
 
     // Update elements if streamlit sends new arguments - check by comparing timestamp recency
     useEffect(() => {
+        console.log(edges);
         if (lastUpdateTimestamp === props.args.timestamp)
         {
             setNodes(props.args.nodes);
             setEdges(props.args.edges);
+            setLastUpdateTimestamp((new Date()).getTime());
+            handleDataReturnToStreamlit(props.args.nodes, props.args.edges, null);
         }
 
-    }, [props.args.nodes]);
+    }, [props.args.nodes, props.args.edges]);
 
     // Auto zoom callback
     useEffect(() => {
@@ -116,8 +119,9 @@ const StreamlitFlowComponent = (props) => {
 
     // Theme callback
     useEffect(() => {
+        console.log("Theme changed");
         setEdges(edges.map(edge => ({...edge, labelStyle:{'fill': props.theme.base === "dark" ? 'white' : 'black'}})))
-    }, [props.theme])
+    }, [props.theme.base])
 
     // Context Menu Callbacks
 
