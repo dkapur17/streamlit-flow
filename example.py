@@ -1,94 +1,149 @@
-import streamlit as st
-from streamlit_flow import streamlit_flow
-from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
-from streamlit_flow.state import StreamlitFlowState
-from streamlit_flow.layouts import TreeLayout, RadialLayout
+# example.py
 import random
 from uuid import uuid4
 
+import streamlit as st
+
+from streamlit_flow import streamlit_flow
+from streamlit_flow.elements import StreamlitFlowEdge, StreamlitFlowNode
+from streamlit_flow.layouts import RadialLayout, TreeLayout
+from streamlit_flow.state import StreamlitFlowState
+
 st.set_page_config("Streamlit Flow Example", layout="wide")
+st.title("Streamlit Flow Example with Image Fetch Node")
 
-st.title("Streamlit Flow Example")
+if "curr_state" not in st.session_state:
+    nodes = [
+        StreamlitFlowNode("1", (0, 0), {"content": "Input Node"}, "input", "right"),
+        StreamlitFlowNode(
+            "2", (1, 0), {"content": "Default Node"}, "default", "right", "left"
+        ),
+        StreamlitFlowNode(
+            "3", (2, 0), {"content": "Image Fetch Node"}, "imageFetch", "right", "left"
+        ),  # <-- Custom Node
+    ]
 
+    edges = [
+        StreamlitFlowEdge(
+            "1-2",
+            "1",
+            "2",
+            animated=True,
+            marker_start={},
+            marker_end={"type": "arrow"},
+        ),
+        StreamlitFlowEdge("2-3", "2", "3", animated=True),
+    ]
 
-if 'curr_state' not in st.session_state:
-	nodes = [StreamlitFlowNode("1", (0, 0), {'content': 'Node 1'}, 'input', 'right'),
-			StreamlitFlowNode("2", (1, 0), {'content': 'Node 2'}, 'default', 'right', 'left'),
-			StreamlitFlowNode("3", (2, 0), {'content': 'Node 3'}, 'default', 'right', 'left'),
-			# StreamlitFlowNode("4", (2, 1), {'content': 'Node 4'}, 'output', target_position='left'),
-			# StreamlitFlowNode("5", (3, 0), {'content': 'Node 5'}, 'output', target_position='left'),
-			# StreamlitFlowNode("6", (3, 1), {'content': 'Node 6'}, 'output', target_position='left'),
-			# StreamlitFlowNode("7", (4, 0), {'content': 'Node 7'}, 'output', target_position='left'),
-			]
+    st.session_state.curr_state = StreamlitFlowState(nodes, edges)
 
-	edges = [StreamlitFlowEdge("1-2", "1", "2", animated=True, marker_start={}, marker_end={'type': 'arrow'}),
-			StreamlitFlowEdge("1-3", "1", "3", animated=True),
-			# StreamlitFlowEdge("2-4", "2", "4", animated=True),
-			# StreamlitFlowEdge("2-5", "2", "5", animated=True),
-			# StreamlitFlowEdge("3-6", "3", "6", animated=True),
-			# StreamlitFlowEdge("3-7", "3", "7", animated=True)
-			]
-	
-	st.session_state.curr_state = StreamlitFlowState(nodes, edges)
+# Control Buttons
+# col1, col2, col3, col4 = st.columns(4)
 
-col1, col2, col3, col4 = st.columns(4)
+# with col1:
+#     if st.button("Add Node"):
+#         new_node_id = str(f"st-flow-node_{uuid4()}")
+#         new_node = StreamlitFlowNode(
+#             new_node_id,
+#             (random.uniform(-100, 100), random.uniform(-100, 100)),
+#             {"content": f"Node {len(st.session_state.curr_state.nodes) + 1}"},
+#             "default",
+#             "right",
+#             "left",
+#         )
+#         st.session_state.curr_state.nodes.append(new_node)
+#         st.experimental_rerun()
 
-with col1:
-	if st.button("Add node"):
-		new_node = StreamlitFlowNode(str(f"st-flow-node_{uuid4()}"), (0, 0), {'content': f'Node {len(st.session_state.curr_state.nodes) + 1}'}, 'default', 'right', 'left')
-		st.session_state.curr_state.nodes.append(new_node)
-		st.rerun()
+# with col2:
+#     if st.button("Delete Random Node"):
+#         if len(st.session_state.curr_state.nodes) > 0:
+#             node_to_delete = random.choice(st.session_state.curr_state.nodes)
+#             st.session_state.curr_state.nodes = [
+#                 node
+#                 for node in st.session_state.curr_state.nodes
+#                 if node.id != node_to_delete.id
+#             ]
+#             st.session_state.curr_state.edges = [
+#                 edge
+#                 for edge in st.session_state.curr_state.edges
+#                 if edge.source != node_to_delete.id and edge.target != node_to_delete.id
+#             ]
+#             st.experimental_rerun()
 
-with col2:
-	if st.button("Delete Random Node"):
-		if len(st.session_state.curr_state.nodes) > 0:
-			node_to_delete = random.choice(st.session_state.curr_state.nodes)
-			st.session_state.curr_state.nodes = [node for node in st.session_state.curr_state.nodes if node.id != node_to_delete.id]
-			st.session_state.curr_state.edges = [edge for edge in st.session_state.curr_state.edges if edge.source != node_to_delete.id and edge.target != node_to_delete.id]
-			st.rerun()
+# with col3:
+#     if st.button("Add Edge"):
+#         if len(st.session_state.curr_state.nodes) > 1:
+#             source = random.choice(st.session_state.curr_state.nodes)
+#             target = random.choice(
+#                 [
+#                     node
+#                     for node in st.session_state.curr_state.nodes
+#                     if node.id != source.id
+#                 ]
+#             )
+#             new_edge = StreamlitFlowEdge(
+#                 f"{source.id}-{target.id}", source.id, target.id, animated=True
+#             )
+#             st.session_state.curr_state.edges.append(new_edge)
+#             st.experimental_rerun()
 
-with col3:
-	if st.button("Add Edge"):
-		if len(st.session_state.curr_state.nodes) > 1:
-			source = random.choice(st.session_state.curr_state.nodes)
-			target = random.choice([node for node in st.session_state.curr_state.nodes if node.id != source.id])
-			new_edge = StreamlitFlowEdge(f"{source.id}-{target.id}", source.id, target.id, animated=True)
-			st.session_state.curr_state.edges.append(new_edge)
-			st.rerun()
-	
-with col4:
-	if st.button("Delete Random Edge"):
-		if len(st.session_state.curr_state.edges) > 0:
-			edge_to_delete = random.choice(st.session_state.curr_state.edges)
-			st.session_state.curr_state.edges = [edge for edge in st.session_state.curr_state.edges if edge.id != edge_to_delete.id]
-			st.rerun()
+# with col4:
+#     if st.button("Delete Random Edge"):
+#         if len(st.session_state.curr_state.edges) > 0:
+#             edge_to_delete = random.choice(st.session_state.curr_state.edges)
+#             st.session_state.curr_state.edges = [
+#                 edge
+#                 for edge in st.session_state.curr_state.edges
+#                 if edge.id != edge_to_delete.id
+#             ]
+#             st.experimental_rerun()
 
+# Render the Flowchart
+st.session_state.curr_state = streamlit_flow(
+    "example_flow",
+    st.session_state.curr_state,
+    layout=TreeLayout(direction="right"),
+    fit_view=True,
+    height=500,
+    enable_node_menu=True,
+    enable_edge_menu=True,
+    enable_pane_menu=True,
+    get_edge_on_click=True,
+    get_node_on_click=True,
+    show_minimap=True,
+    hide_watermark=True,
+    allow_new_edges=True,
+    min_zoom=0.1,
+)
 
-st.session_state.curr_state = streamlit_flow('example_flow', 
-								st.session_state.curr_state, 
-								layout=TreeLayout(direction='right'), 
-								fit_view=True, 
-								height=500, 
-								enable_node_menu=True,
-								enable_edge_menu=True,
-								enable_pane_menu=True,
-								get_edge_on_click=True,
-								get_node_on_click=True, 
-								show_minimap=True, 
-								hide_watermark=True, 
-								allow_new_edges=True,
-								min_zoom=0.1)
+# Display Current State
+# col1, col2, col3 = st.columns(3)
 
+# with col1:
+#     st.subheader("Nodes")
+#     for node in st.session_state.curr_state.nodes:
+#         st.write(node)
 
-col1, col2, col3 = st.columns(3)
+# with col2:
+#     st.subheader("Edges")
+#     for edge in st.session_state.curr_state.edges:
+#         st.write(edge)
 
-with col1:
-	for node in st.session_state.curr_state.nodes:
-		st.write(node)
+# with col3:
+#     st.subheader("Selected ID")
+#     st.write(st.session_state.curr_state.selected_id)
 
-with col2:
-	for edge in st.session_state.curr_state.edges:
-		st.write(edge)
+# Handle component value returned from the ImageFetchNode
+component_value = st.experimental_get_query_params().get("component_value", None)
 
-with col3:
-	st.write(st.session_state.curr_state.selected_id)
+if component_value:
+    import json
+
+    try:
+        data = json.loads(component_value[0])
+        selected_node_id = data.get("nodeId")
+        image_data = data.get("imageData")  # This is a base64 string
+        st.write(f"Node ID: {selected_node_id} fetched image data:")
+        st.image(image_data)  # Streamlit can render base64 image data directly
+    except json.JSONDecodeError:
+        st.write("Received data is not valid JSON.")
