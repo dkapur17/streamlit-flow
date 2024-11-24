@@ -28,17 +28,13 @@ const ImageFetchNode = ({ id, data }) => {
 			};
 
 			// Replace this URL with your actual API endpoint
-			const response = await axios.post(
-				`https://champagne-master-aws.thoughtspotstaging.cloud/api/rest/2.0/report/answer`,
-				data,
-				{
-					headers: {
-						Authorization: `Bearer `,
-						"Content-Type": "application/json",
-					},
-					responseType: "blob",
-				}
-			);
+			const response = await axios.post(``, data, {
+				headers: {
+					Authorization: `Bearer `,
+					"Content-Type": "application/json",
+				},
+				responseType: "blob",
+			});
 
 			// Check if the response is of type image
 			if (
