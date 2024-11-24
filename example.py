@@ -9,8 +9,8 @@ from streamlit_flow.elements import StreamlitFlowEdge, StreamlitFlowNode
 from streamlit_flow.layouts import RadialLayout, TreeLayout
 from streamlit_flow.state import StreamlitFlowState
 
-st.set_page_config("Streamlit Flow Example", layout="wide")
-st.title("Streamlit Flow Example with Image Fetch Node")
+st.set_page_config("Myth demo", layout="wide")
+st.title("Myth demo")
 
 if "curr_state" not in st.session_state:
     nodes = [
@@ -104,7 +104,7 @@ st.session_state.curr_state = streamlit_flow(
     st.session_state.curr_state,
     layout=TreeLayout(direction="right"),
     fit_view=True,
-    height=500,
+    height="75rem",
     enable_node_menu=True,
     enable_edge_menu=True,
     enable_pane_menu=True,
@@ -134,16 +134,16 @@ st.session_state.curr_state = streamlit_flow(
 #     st.write(st.session_state.curr_state.selected_id)
 
 # Handle component value returned from the ImageFetchNode
-component_value = st.experimental_get_query_params().get("component_value", None)
+# component_value = st.experimental_get_query_params().get("component_value", None)
 
-if component_value:
-    import json
+# if component_value:
+#     import json
 
-    try:
-        data = json.loads(component_value[0])
-        selected_node_id = data.get("nodeId")
-        image_data = data.get("imageData")  # This is a base64 string
-        st.write(f"Node ID: {selected_node_id} fetched image data:")
-        st.image(image_data)  # Streamlit can render base64 image data directly
-    except json.JSONDecodeError:
-        st.write("Received data is not valid JSON.")
+#     try:
+#         data = json.loads(component_value[0])
+#         selected_node_id = data.get("nodeId")
+#         image_data = data.get("imageData")  # This is a base64 string
+#         st.write(f"Node ID: {selected_node_id} fetched image data:")
+#         st.image(image_data)  # Streamlit can render base64 image data directly
+#     except json.JSONDecodeError:
+#         st.write("Received data is not valid JSON.")

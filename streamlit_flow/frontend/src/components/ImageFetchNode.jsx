@@ -1,34 +1,56 @@
 // components/ImageFetchNode.jsx
 import axios from "axios";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Handle } from "reactflow";
 import { Streamlit, withStreamlitConnection } from "streamlit-component-lib";
 
 const ImageFetchNode = ({ id, data }) => {
 	const [inputId, setInputId] = useState("");
-	const [imageSrc, setImageSrc] = useState(null); // Changed from imageUrl to imageSrc
-	const [loading, setLoading] = useState(false);
+	const [imageSrc, setImageSrc] = useState(null); // For image display
+	const [metadataName, setMetadataName] = useState(""); // For node heading
+	const [filters, setFilters] = useState([]); // Array of filter objects { name: string, values: array }
+	const [selectedFilters, setSelectedFilters] = useState({}); // { filterName: selectedValue }
+	const [loadingImage, setLoadingImage] = useState(false);
+	const [loadingFilters, setLoadingFilters] = useState(false);
 	const [error, setError] = useState(null);
 
-	const handleFetchImage = async () => {
+	// Cleanup the object URL when the component unmounts or imageSrc changes
+	useEffect(() => {
+		return () => {
+			if (imageSrc) {
+				URL.revokeObjectURL(imageSrc);
+			}
+		};
+	}, [imageSrc]);
+
+	const handleFetchImageAndFilters = async () => {
 		if (!inputId) {
 			setError("Please enter a valid ID.");
 			return;
 		}
 
-		setLoading(true);
+		setLoadingImage(true);
+		setLoadingFilters(true);
 		setError(null);
 		setImageSrc(null); // Reset previous image
+		setMetadataName(""); // Reset previous metadata name
+		setFilters([]); // Reset previous filters
+		setSelectedFilters({}); // Reset previous selections
 
 		try {
-			const data = {
+			const img_req_data = {
 				metadata_identifier: inputId,
 				file_format: "PNG",
 			};
 
+			const filter_req_data = {
+				metadata_identifier: inputId,
+				data_format: "FULL",
+			};
+
 			// Replace this URL with your actual API endpoint
-			const response = await axios.post(``, data, {
+			const imageResponse = await axios.post(``, img_req_data, {
 				headers: {
 					Authorization: `Bearer `,
 					"Content-Type": "application/json",
@@ -36,20 +58,21 @@ const ImageFetchNode = ({ id, data }) => {
 				responseType: "blob",
 			});
 
+			const reader = new FileReader();
+
 			// Check if the response is of type image
 			if (
-				response.headers["content-type"].startsWith(
+				imageResponse.headers["content-type"].startsWith(
 					"application/octet-stream"
 				)
 			) {
 				// Create a local URL for the image blob
-				const imageBlob = response.data;
+				const imageBlob = imageResponse.data;
 				const imageURL = URL.createObjectURL(imageBlob);
 				setImageSrc(imageURL);
 
 				// Optionally, send the image data back to Streamlit
-				// Note: You cannot send binary data directly; consider sending a base64 string if needed
-				const reader = new FileReader();
+
 				reader.onloadend = () => {
 					Streamlit.setComponentValue({
 						nodeId: id,
@@ -60,27 +83,95 @@ const ImageFetchNode = ({ id, data }) => {
 			} else {
 				setError("Received data is not an image.");
 			}
+
+			// Fetch the JSON data for filters
+			const filtersResponse = await axios.post(``, filter_req_data, {
+				headers: {
+					Authorization: `Bearer `,
+					"Content-Type": "application/json",
+				},
+				responseType: "json",
+			});
+
+			// Validate and process the JSON response
+			if (
+				filtersResponse.data &&
+				typeof filtersResponse.data === "object" &&
+				filtersResponse.data.metadata_name &&
+				Array.isArray(filtersResponse.data.contents) &&
+				filtersResponse.data.contents.length > 0
+			) {
+				const metadata = filtersResponse.data.metadata_name;
+				setMetadataName(metadata);
+
+				const content = filtersResponse.data.contents[0]; // Assuming we take the first content object
+				const columnNames = content.column_names;
+				const dataRows = content.data_rows;
+
+				// Extract unique values for each column
+				const extractedFilters = columnNames.map((col) => {
+					const uniqueValues = Array.from(
+						new Set(
+							dataRows
+								.map((row) => row[col])
+								.filter(
+									(val) => val !== undefined && val !== null
+								)
+						)
+					);
+					return {
+						name: col,
+						values: uniqueValues,
+					};
+				});
+
+				setFilters(extractedFilters);
+
+				// Initialize selectedFilters with the first value of each filter
+				const initialSelected = {};
+				extractedFilters.forEach((filter) => {
+					initialSelected[filter.name] = filter.values[0] || "";
+				});
+				setSelectedFilters(initialSelected);
+
+				// Send the metadata and initial filters back to Streamlit
+				Streamlit.setComponentValue({
+					nodeId: id,
+					imageData: reader.result || null, // From the image fetch
+					metadataName: metadata,
+					filters: initialSelected,
+				});
+			}
 		} catch (err) {
 			console.error(err);
-			setError("Failed to fetch image. Please try again.");
+			setError("Failed to fetch image or filters. Please try again.");
 		} finally {
-			setLoading(false);
+			setLoadingImage(false);
+			setLoadingFilters(false);
 		}
 	};
 
-	// Cleanup the object URL when the component unmounts or imageSrc changes
-	React.useEffect(() => {
-		return () => {
-			if (imageSrc) {
-				URL.revokeObjectURL(imageSrc);
-			}
+	const handleFilterChange = (filterName, selectedValue) => {
+		const updatedFilters = {
+			...selectedFilters,
+			[filterName]: selectedValue,
 		};
-	}, [imageSrc]);
+		setSelectedFilters(updatedFilters);
+
+		// Optionally, send the updated filter selections back to Streamlit
+		Streamlit.setComponentValue({
+			nodeId: id,
+			imageData: imageSrc ? imageSrc : null,
+			metadataName: metadataName,
+			filters: updatedFilters,
+		});
+	};
 
 	return (
 		<div
 			className="image-fetch-node"
 			style={{
+				width: "25rem",
 				padding: "10px",
 				border: "1px solid #ddd",
 				borderRadius: "5px",
@@ -88,24 +179,39 @@ const ImageFetchNode = ({ id, data }) => {
 			}}
 		>
 			<Handle type="target" position="top" />
+			{metadataName && (
+				<div
+					style={{
+						marginTop: "10px",
+						fontWeight: "bold",
+						fontSize: "16px",
+					}}
+				>
+					{metadataName}
+				</div>
+			)}
+
 			<div>
 				<input
 					type="text"
-					placeholder="Enter Chart ID"
+					placeholder="Enter Answer ID"
 					value={inputId}
 					onChange={(e) => setInputId(e.target.value)}
 					style={{
 						width: "100%",
 						padding: "5px",
 						marginBottom: "5px",
+						boxSizing: "border-box",
 					}}
 				/>
 				<button
-					onClick={handleFetchImage}
-					disabled={loading}
-					style={{ width: "100%", padding: "5px" }}
+					onClick={handleFetchImageAndFilters}
+					disabled={loadingImage || loadingFilters}
+					style={{ width: "100%", padding: "5px", cursor: "pointer" }}
 				>
-					{loading ? "Fetching..." : "Fetch Chart"}
+					{loadingImage || loadingFilters
+						? "Fetching..."
+						: "Fetch Chart & Filters"}
 				</button>
 				{error && (
 					<div style={{ color: "red", marginTop: "5px" }}>
@@ -116,8 +222,47 @@ const ImageFetchNode = ({ id, data }) => {
 					<img
 						src={imageSrc}
 						alt="Fetched"
-						style={{ width: "100%", marginTop: "10px" }}
+						style={{
+							marginTop: "10px",
+							borderRadius: "5px",
+						}}
 					/>
+				)}
+				{filters.length > 0 && (
+					<div style={{ marginTop: "10px" }}>
+						{filters.map((filter, index) => (
+							<div key={index} style={{ marginBottom: "10px" }}>
+								<label
+									style={{
+										display: "block",
+										marginBottom: "5px",
+									}}
+								>
+									{filter.name}
+								</label>
+								<select
+									value={selectedFilters[filter.name] || ""}
+									onChange={(e) =>
+										handleFilterChange(
+											filter.name,
+											e.target.value
+										)
+									}
+									style={{
+										width: "100%",
+										padding: "5px",
+										boxSizing: "border-box",
+									}}
+								>
+									{filter.values.map((value, idx) => (
+										<option key={idx} value={value}>
+											{value}
+										</option>
+									))}
+								</select>
+							</div>
+						))}
+					</div>
 				)}
 			</div>
 			<Handle type="source" position="bottom" />

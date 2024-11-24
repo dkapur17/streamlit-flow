@@ -49,14 +49,23 @@ table img {
 	width: 100%;
 	padding: 5px;
 	margin-bottom: 5px;
+	box-sizing: border-box;
 }
 
 .image-fetch-node button {
 	width: 100%;
 	padding: 5px;
+	cursor: pointer;
 }
 
 .image-fetch-node img {
 	width: 100%;
 	margin-top: 10px;
+	border-radius: 5px;
+}
+
+.image-fetch-node select {
+	width: 100%;
+	padding: 5px;
+	box-sizing: border-box;
 }
