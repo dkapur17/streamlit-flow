@@ -33,7 +33,7 @@ class StreamlitFlowNode:
         id: str,
         pos: Tuple[float, float],
         data: Dict[str, any],
-        node_type: Literal["default", "input", "output", "imageFetch"] = "default",
+        node_type: Literal["default", "input", "output", "imageFetch", "vizNode"] = "default",
         source_position: Literal["bottom", "top", "left", "right"] = "bottom",
         target_position: Literal["bottom", "top", "left", "right"] = "top",
         hidden: bool = False,
@@ -112,6 +112,7 @@ class StreamlitFlowNode:
             "input",
             "output",
             "imageFetch",
+            "vizNode"
         ], f"Node type must be one of ['default', 'input', 'output']. Got {self.type}"
         assert (
             self.source_position in ["top", "bottom", "left", "right"]
@@ -144,7 +145,7 @@ class StreamlitFlowNode:
         return node_dict
 
     def __repr__(self):
-        return f"StreamlitFlowNode({self.id}, ({round(self.position['x'], 2)}, {round(self.position['y'],2)}), '{self.data.get('content', '')}')"
+        return f"StreamlitFlowNode({self.id}, ({round(self.position['x'], 2)}, {round(self.position['y'],2)}), '{self.data.get('content', '')}', {self.data})"
 
 
 class StreamlitFlowEdge:

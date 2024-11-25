@@ -6,7 +6,7 @@ from .elements import StreamlitFlowEdge, StreamlitFlowNode
 from .layouts import Layout, ManualLayout
 from .state import StreamlitFlowState
 
-_RELEASE = True
+_RELEASE = False
 
 if not _RELEASE:
     _st_flow_func = components.declare_component(
@@ -40,6 +40,7 @@ def streamlit_flow(
     enable_node_menu: bool = False,
     enable_edge_menu: bool = False,
     hide_watermark: bool = False,
+    lb_data: dict = {}
 ):
     """
     The main function to render the flowchart component in Streamlit.
@@ -92,6 +93,7 @@ def streamlit_flow(
         key=key,
         timestamp=state.timestamp,
         component="streamlit_flow",
+        lbData=lb_data
     )
 
     if component_value is None:

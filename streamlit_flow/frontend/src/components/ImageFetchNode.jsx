@@ -3,9 +3,14 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Handle } from "reactflow";
-import { Streamlit, withStreamlitConnection } from "streamlit-component-lib";
+import { withStreamlitConnection } from "streamlit-component-lib";
 
-const ImageFetchNode = ({ id, data }) => {
+const FETCH_IMAGE_API_URL = process.env.REACT_APP_FETCH_IMAGE_API_URL;
+const FETCH_FILTER_API_URL = process.env.REACT_APP_FETCH_FILTER_API_URL;
+const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN;
+
+const ImageFetchNode = ({ args }) => {
+	console.log(args)
 	const [inputId, setInputId] = useState("");
 	const [imageSrc, setImageSrc] = useState(null); // For image display
 	const [metadataName, setMetadataName] = useState(""); // For node heading
@@ -50,9 +55,9 @@ const ImageFetchNode = ({ id, data }) => {
 			};
 
 			// Replace this URL with your actual API endpoint
-			const imageResponse = await axios.post(``, img_req_data, {
+			const imageResponse = await axios.post(`${FETCH_IMAGE_API_URL}`, img_req_data, {
 				headers: {
-					Authorization: `Bearer `,
+					Authorization: `Bearer ${BEARER_TOKEN}`,
 					"Content-Type": "application/json",
 				},
 				responseType: "blob",
@@ -71,23 +76,15 @@ const ImageFetchNode = ({ id, data }) => {
 				const imageURL = URL.createObjectURL(imageBlob);
 				setImageSrc(imageURL);
 
-				// Optionally, send the image data back to Streamlit
-
-				reader.onloadend = () => {
-					Streamlit.setComponentValue({
-						nodeId: id,
-						imageData: reader.result, // base64 encoded string
-					});
-				};
 				reader.readAsDataURL(imageBlob);
 			} else {
 				setError("Received data is not an image.");
 			}
 
 			// Fetch the JSON data for filters
-			const filtersResponse = await axios.post(``, filter_req_data, {
+			const filtersResponse = await axios.post(`${FETCH_FILTER_API_URL}`, filter_req_data, {
 				headers: {
-					Authorization: `Bearer `,
+					Authorization: `Bearer ${BEARER_TOKEN}`,
 					"Content-Type": "application/json",
 				},
 				responseType: "json",
@@ -134,13 +131,6 @@ const ImageFetchNode = ({ id, data }) => {
 				});
 				setSelectedFilters(initialSelected);
 
-				// Send the metadata and initial filters back to Streamlit
-				Streamlit.setComponentValue({
-					nodeId: id,
-					imageData: reader.result || null, // From the image fetch
-					metadataName: metadata,
-					filters: initialSelected,
-				});
 			}
 		} catch (err) {
 			console.error(err);
@@ -157,14 +147,6 @@ const ImageFetchNode = ({ id, data }) => {
 			[filterName]: selectedValue,
 		};
 		setSelectedFilters(updatedFilters);
-
-		// Optionally, send the updated filter selections back to Streamlit
-		Streamlit.setComponentValue({
-			nodeId: id,
-			imageData: imageSrc ? imageSrc : null,
-			metadataName: metadataName,
-			filters: updatedFilters,
-		});
 	};
 
 	return (

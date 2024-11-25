@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
 
-import ReactFlow, {
+import {
+	ReactFlow,
 	addEdge,
 	Background,
 	Controls,
@@ -31,6 +32,7 @@ import PaneConextMenu from "./components/PaneContextMenu";
 import ImageFetchNode from "./components/ImageFetchNode"; // <-- Import the new node
 
 import createElkGraphLayout from "./layouts/ElkLayout";
+import VizNode from "./components/VizNode";
 
 const StreamlitFlowComponent = (props) => {
 	const nodeTypes = useMemo(
@@ -39,6 +41,7 @@ const StreamlitFlowComponent = (props) => {
 			output: MarkdownOutputNode,
 			default: MarkdownDefaultNode,
 			imageFetch: ImageFetchNode,
+			vizNode: VizNode
 		}),
 		[]
 	);

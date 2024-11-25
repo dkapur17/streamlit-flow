@@ -18,8 +18,11 @@ if "curr_state" not in st.session_state:
         StreamlitFlowNode(
             "2", (1, 0), {"content": "Default Node"}, "default", "right", "left"
         ),
+        # StreamlitFlowNode(
+        #     "3", (2, 0), {"content": "Image Fetch Node", "filters": "123"}, "imageFetch", "right", "left"
+        # ),  # <-- Custom Node
         StreamlitFlowNode(
-            "3", (2, 0), {"content": "Image Fetch Node"}, "imageFetch", "right", "left"
+            "4", (5, 0), {"content": "Another Image Fetch Node", "vizId": "0447edee-433b-4751-ada3-0160dd715aee"}, "vizNode", "right", "left"
         ),  # <-- Custom Node
     ]
 
@@ -31,14 +34,28 @@ if "curr_state" not in st.session_state:
             animated=True,
             marker_start={},
             marker_end={"type": "arrow"},
-        ),
-        StreamlitFlowEdge("2-3", "2", "3", animated=True),
+        )
     ]
 
     st.session_state.curr_state = StreamlitFlowState(nodes, edges)
 
 # Control Buttons
 # col1, col2, col3, col4 = st.columns(4)
+
+if st.button("Add Node"):
+    new_node_id = str(f"st-flow-node_{uuid4()}")
+    new_node = StreamlitFlowNode(
+        new_node_id,
+        (random.uniform(-100, 100), random.uniform(-100, 100)),
+        {"content": f"Node {len(st.session_state.curr_state.nodes) + 1}"},
+        "routerNode",
+        "right",
+        "left",
+    )
+    st.session_state.curr_state.nodes.append(new_node)
+    st.rerun()
+
+print(st.session_state.curr_state.nodes[-1])
 
 # with col1:
 #     if st.button("Add Node"):
@@ -115,6 +132,8 @@ st.session_state.curr_state = streamlit_flow(
     allow_new_edges=True,
     min_zoom=0.1,
 )
+
+print(st.session_state.curr_state.selected_id)
 
 # Display Current State
 # col1, col2, col3 = st.columns(3)
