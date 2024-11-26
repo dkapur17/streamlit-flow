@@ -2,6 +2,7 @@
 import random
 from uuid import uuid4
 
+import requests
 import streamlit as st
 
 from streamlit_flow import streamlit_flow
@@ -10,31 +11,86 @@ from streamlit_flow.layouts import RadialLayout, TreeLayout
 from streamlit_flow.state import StreamlitFlowState
 
 st.set_page_config("Myth demo", layout="wide")
-st.title("Myth demo")
+st.title("MYTh demo")
+
+# Initialize session state for additional data if not already present
+if "lb_data" not in st.session_state:
+    st.session_state.lb_data = None
+    st.session_state.api_error = None
+
+# Create a text input for the user to enter an ID or query
+lb_id = st.text_input("Enter Liveboard ID", "")
+lb_name = ""
+
+# Create a button that triggers the API call when clicked
+if st.button("Set Liveboard"):
+    if lb_id.strip() == "":
+        st.session_state.api_error = "Please enter a valid ID."
+        st.session_state.lb_data = None
+    else:
+        try:
+            # Replace the URL below with your actual API endpoint
+            lb_api_url = ""
+
+            headers = {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": "",
+            }
+
+            req_data = {
+                "metadata_identifier": lb_id,
+                "data_format": "FULL",
+                "record_offset": 0,
+                "record_size": 0,
+            }
+
+            response = requests.post(lb_api_url, headers=headers, json=req_data)
+
+            # Check if the request was successful
+            if response.status_code == 200:
+                # Assuming the API returns JSON data
+                st.session_state.lb_data = response.json()
+                st.session_state.api_error = None
+            else:
+                st.session_state.api_error = (
+                    f"API request failed with status code {response.status_code}."
+                )
+                st.session_state.lb_data = None
+        except Exception as e:
+            st.session_state.api_error = f"An error occurred: {e}"
+            st.session_state.lb_data = None
+
+
+# Display the fetched data or error message
+if st.session_state.api_error:
+    st.error(st.session_state.api_error)
+
+if st.session_state.lb_data:
+    st.subheader(f"Liveboard - {st.session_state.lb_data['metadata_name']}")
+    # st.json(st.session_state.lb_data)
 
 if "curr_state" not in st.session_state:
     nodes = [
-        StreamlitFlowNode("1", (0, 0), {"content": "Input Node"}, "input", "right"),
-        StreamlitFlowNode(
-            "2", (1, 0), {"content": "Default Node"}, "default", "right", "left"
-        ),
+        # StreamlitFlowNode("1", (0, 0), {"content": "Input Node"}, "input", "right"),
         # StreamlitFlowNode(
-        #     "3", (2, 0), {"content": "Image Fetch Node", "filters": "123"}, "imageFetch", "right", "left"
-        # ),  # <-- Custom Node
+        #     "2", (1, 0), {"content": "Default Node"}, "default", "right", "left"
+        # ),
         StreamlitFlowNode(
-            "4", (5, 0), {"content": "Another Image Fetch Node", "vizId": "0447edee-433b-4751-ada3-0160dd715aee"}, "vizNode", "right", "left"
+            "1", (0, 0), {"content": "Image Fetch Node"}, "imageFetch", "right", "left"
         ),  # <-- Custom Node
     ]
 
     edges = [
-        StreamlitFlowEdge(
-            "1-2",
-            "1",
-            "2",
-            animated=True,
-            marker_start={},
-            marker_end={"type": "arrow"},
-        )
+        # StreamlitFlowEdge(
+        #     "1-2",
+        #     "1",
+        #     "2",
+        #     animated=True,
+        #     marker_start={},
+        #     marker_end={"type": "arrow"},
+        # ),
+        # StreamlitFlowEdge("2-3", "2", "3", animated=True),
     ]
 
     st.session_state.curr_state = StreamlitFlowState(nodes, edges)
@@ -116,7 +172,8 @@ print(st.session_state.curr_state.nodes[-1])
 #             st.experimental_rerun()
 
 # Render the Flowchart
-st.session_state.curr_state = streamlit_flow(
+# st.session_state.curr_state = streamlit_flow(
+component_value = streamlit_flow(
     "example_flow",
     st.session_state.curr_state,
     layout=TreeLayout(direction="right"),
@@ -130,10 +187,37 @@ st.session_state.curr_state = streamlit_flow(
     show_minimap=True,
     hide_watermark=True,
     allow_new_edges=True,
+    animate_new_edges=True,
     min_zoom=0.1,
 )
 
-print(st.session_state.curr_state.selected_id)
+# Handle Component Value Returned from ImageFetchNode
+if component_value:
+    try:
+        print(f"component_value = {component_value}")
+        # component_value is expected to be a dictionary
+        node_id = component_value.get("nodeId")
+        print(f"node id - {node_id}")
+        image_data = component_value.get("imageData")  # Base64 string
+        metadata_name = component_value.get("metadataName")
+        print(metadata_name)
+        filters = component_value.get("filters")  # Dict {filterName: selectedValue}
+
+        st.subheader("Fetched Data from ImageFetchNode")
+        st.write(f"**Node ID:** {node_id}")
+
+        if image_data:
+            st.image(image_data, caption=f"Image from node {node_id}")
+
+        if metadata_name:
+            st.write(f"**Metadata Name:** {metadata_name}")
+
+        if filters:
+            st.write("**Selected Filters:**")
+            for filter_name, filter_value in filters.items():
+                st.write(f"- {filter_name}: {filter_value}")
+    except Exception as e:
+        st.error(f"Error processing component data: {e}")
 
 # Display Current State
 # col1, col2, col3 = st.columns(3)

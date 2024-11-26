@@ -1,4 +1,5 @@
 // components/ImageFetchNode.jsx
+import { SearchEmbed, useEmbedRef } from "@thoughtspot/visual-embed-sdk/react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
@@ -10,7 +11,7 @@ const FETCH_FILTER_API_URL = process.env.REACT_APP_FETCH_FILTER_API_URL;
 const BEARER_TOKEN = process.env.REACT_APP_BEARER_TOKEN;
 
 const ImageFetchNode = ({ args }) => {
-	console.log(args)
+	console.log(args);
 	const [inputId, setInputId] = useState("");
 	const [imageSrc, setImageSrc] = useState(null); // For image display
 	const [metadataName, setMetadataName] = useState(""); // For node heading
@@ -19,6 +20,8 @@ const ImageFetchNode = ({ args }) => {
 	const [loadingImage, setLoadingImage] = useState(false);
 	const [loadingFilters, setLoadingFilters] = useState(false);
 	const [error, setError] = useState(null);
+
+	const embedRef = useEmbedRef();
 
 	// Cleanup the object URL when the component unmounts or imageSrc changes
 	useEffect(() => {
@@ -55,13 +58,17 @@ const ImageFetchNode = ({ args }) => {
 			};
 
 			// Replace this URL with your actual API endpoint
-			const imageResponse = await axios.post(`${FETCH_IMAGE_API_URL}`, img_req_data, {
-				headers: {
-					Authorization: `Bearer ${BEARER_TOKEN}`,
-					"Content-Type": "application/json",
-				},
-				responseType: "blob",
-			});
+			const imageResponse = await axios.post(
+				`${FETCH_IMAGE_API_URL}`,
+				img_req_data,
+				{
+					headers: {
+						Authorization: `Bearer ${BEARER_TOKEN}`,
+						"Content-Type": "application/json",
+					},
+					responseType: "blob",
+				}
+			);
 
 			const reader = new FileReader();
 
@@ -82,13 +89,17 @@ const ImageFetchNode = ({ args }) => {
 			}
 
 			// Fetch the JSON data for filters
-			const filtersResponse = await axios.post(`${FETCH_FILTER_API_URL}`, filter_req_data, {
-				headers: {
-					Authorization: `Bearer ${BEARER_TOKEN}`,
-					"Content-Type": "application/json",
-				},
-				responseType: "json",
-			});
+			const filtersResponse = await axios.post(
+				`${FETCH_FILTER_API_URL}`,
+				filter_req_data,
+				{
+					headers: {
+						Authorization: `Bearer ${BEARER_TOKEN}`,
+						"Content-Type": "application/json",
+					},
+					responseType: "json",
+				}
+			);
 
 			// Validate and process the JSON response
 			if (
@@ -130,7 +141,6 @@ const ImageFetchNode = ({ args }) => {
 					initialSelected[filter.name] = filter.values[0] || "";
 				});
 				setSelectedFilters(initialSelected);
-
 			}
 		} catch (err) {
 			console.error(err);
@@ -153,7 +163,6 @@ const ImageFetchNode = ({ args }) => {
 		<div
 			className="image-fetch-node"
 			style={{
-				width: "25rem",
 				padding: "10px",
 				border: "1px solid #ddd",
 				borderRadius: "5px",
@@ -198,6 +207,25 @@ const ImageFetchNode = ({ args }) => {
 				{error && (
 					<div style={{ color: "red", marginTop: "5px" }}>
 						{error}
+					</div>
+				)}
+				{inputId && (
+					<div className="answer-embed-container">
+						<SearchEmbed
+							ref={embedRef}
+							dataPanelV2={false}
+							additionalFlags={{
+								overrideConsoleLogs: false,
+							}}
+							answerId={inputId}
+							hideSearchBar={true}
+							hideDataSources={true}
+							frameParams={{
+								height: "100%",
+								weight: "100%",
+							}}
+							className="answer-embed-body"
+						/>
 					</div>
 				)}
 				{imageSrc && (
