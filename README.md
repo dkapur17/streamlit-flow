@@ -32,8 +32,6 @@ streamlit_flow('flow', nodes, edges)
 
 **New**
 ```python
-import streamlit as st
-
 from streamlit_flow import streamlit_flow
 from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
 from streamlit_flow.state import StreamlitFlowState
