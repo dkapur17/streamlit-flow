@@ -30,7 +30,7 @@ import createElkGraphLayout from "./layouts/ElkLayout";
 
 const StreamlitFlowComponent = (props) => {
 
-    const nodeTypes = useMemo(() => ({ input: MarkdownInputNode, output: MarkdownOutputNode, default: MarkdownDefaultNode}), [])
+    const nodeTypes = useMemo(() => ({ input: MarkdownInputNode, output: MarkdownOutputNode, default: MarkdownDefaultNode}), []);
     
     const [viewFitAfterLayout, setViewFitAfterLayout] = useState(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(props.args.nodes);
