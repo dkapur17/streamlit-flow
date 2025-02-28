@@ -8,7 +8,7 @@
 
 ![Markdown Support in Node](assets/MarkdownNode.png)
 
-### 🎉 Version 1.6.0 is out now! 🎉
+### 🎉 Version 1.6.1 is out now! 🎉
 
 This version of StreamlitFlow fixes 2 major issues:
 
