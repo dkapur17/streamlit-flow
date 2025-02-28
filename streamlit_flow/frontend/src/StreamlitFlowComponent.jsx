@@ -35,7 +35,8 @@ const StreamlitFlowComponent = (props) => {
     const [viewFitAfterLayout, setViewFitAfterLayout] = useState(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(props.args.nodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(props.args.edges);
-    const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState((new Date()).getTime());
+    const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState(props.args.timestamp);
+    const [layoutNeedsUpdate, setLayoutNeedsUpdate] = useState(false);
 
     const [layoutCalculated, setLayoutCalculated] = useState(false);
 
@@ -97,9 +98,9 @@ const StreamlitFlowComponent = (props) => {
 
     // Update elements if streamlit sends new arguments - check by comparing timestamp recency
     useEffect(() => {
-        console.log(edges);
-        if (lastUpdateTimestamp === props.args.timestamp)
+        if (lastUpdateTimestamp <= props.args.timestamp)
         {
+            setLayoutNeedsUpdate(true);
             setNodes(props.args.nodes);
             setEdges(props.args.edges);
             setLastUpdateTimestamp((new Date()).getTime());
@@ -107,6 +108,15 @@ const StreamlitFlowComponent = (props) => {
         }
 
     }, [props.args.nodes, props.args.edges]);
+
+    // Handle layout when streamlit sends new state
+    useEffect(() => {
+        if(layoutNeedsUpdate)
+        {
+            setLayoutNeedsUpdate(false);
+            setLayoutCalculated(false);
+        }
+    }, [nodes, edges])
 
     // Auto zoom callback
     useEffect(() => {
@@ -119,7 +129,6 @@ const StreamlitFlowComponent = (props) => {
 
     // Theme callback
     useEffect(() => {
-        console.log("Theme changed");
         setEdges(edges.map(edge => ({...edge, labelStyle:{'fill': props.theme.base === "dark" ? 'white' : 'black'}})))
     }, [props.theme.base])
 

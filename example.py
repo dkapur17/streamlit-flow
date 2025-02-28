@@ -31,7 +31,7 @@ if 'curr_state' not in st.session_state:
 	
 	st.session_state.curr_state = StreamlitFlowState(nodes, edges)
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
 	if st.button("Add node"):
@@ -50,10 +50,14 @@ with col2:
 with col3:
 	if st.button("Add Edge"):
 		if len(st.session_state.curr_state.nodes) > 1:
-			source = random.choice(st.session_state.curr_state.nodes)
-			target = random.choice([node for node in st.session_state.curr_state.nodes if node.id != source.id])
+
+			source_candidates = [streamlit_node for streamlit_node in st.session_state.curr_state.nodes if streamlit_node.type in ['input', 'default']]
+			target_candidates = [streamlit_node for streamlit_node in st.session_state.curr_state.nodes if streamlit_node.type in ['default', 'output']]
+			source = random.choice(source_candidates)
+			target = random.choice(target_candidates)
 			new_edge = StreamlitFlowEdge(f"{source.id}-{target.id}", source.id, target.id, animated=True)
-			st.session_state.curr_state.edges.append(new_edge)
+			if not any(edge.id == new_edge.id for edge in st.session_state.curr_state.edges):
+				st.session_state.curr_state.edges.append(new_edge)
 			st.rerun()
 	
 with col4:
@@ -62,6 +66,24 @@ with col4:
 			edge_to_delete = random.choice(st.session_state.curr_state.edges)
 			st.session_state.curr_state.edges = [edge for edge in st.session_state.curr_state.edges if edge.id != edge_to_delete.id]
 			st.rerun()
+
+with col5:
+	if st.button("Random Flow"):
+		del st.session_state.curr_state
+		nodes = [StreamlitFlowNode(str(f"st-flow-node_{uuid4()}"), (0, 0), {'content': f'Node {i}'}, 'default', 'right', 'left') for i in range(5)]
+		edges = []
+		for _ in range(5):
+			source = random.choice(nodes)
+			target = random.choice(nodes)
+			if source.id != target.id:
+				new_edge = StreamlitFlowEdge(f"{source.id}-{target.id}", source.id, target.id, animated=True)
+				if not any(edge.id == new_edge.id for edge in edges):
+					edges.append(new_edge)
+		st.session_state.curr_state = StreamlitFlowState(
+			nodes=nodes,
+			edges=edges
+		)
+		st.rerun()
 
 
 st.session_state.curr_state = streamlit_flow('example_flow', 

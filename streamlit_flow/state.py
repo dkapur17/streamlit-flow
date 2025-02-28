@@ -1,6 +1,7 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from .elements import StreamlitFlowNode, StreamlitFlowEdge
 from typing import List
+from datetime import datetime
 
 @dataclass
 class StreamlitFlowState:
@@ -17,7 +18,7 @@ class StreamlitFlowState:
     nodes: List[StreamlitFlowNode]
     edges: List[StreamlitFlowEdge]
     selected_id: str = None
-    timestamp: float = 0.0
+    timestamp: int = field(default_factory=lambda: int(datetime.now().timestamp() * 1000))
 
     def asdict(self):
         return {
