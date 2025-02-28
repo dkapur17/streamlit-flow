@@ -36,8 +36,8 @@ from streamlit_flow import streamlit_flow
 from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
 from streamlit_flow.state import StreamlitFlowState
 
-nodes = [...]
-edges = [...]
+nodes = []
+edges = []
 state = StreamlitFlowState(nodes, edges)
 
 streamlit_flow('flow', state)
@@ -47,6 +47,8 @@ The benefits we get from this are significant, as the `StreamlitFlowState` class
 
 **Example**
 ```python
+import streamlit as st
+
 from streamlit_flow import streamlit_flow
 from streamlit_flow.elements import StreamlitFlowNode, StreamlitFlowEdge
 from streamlit_flow.state import StreamlitFlowState
@@ -54,19 +56,19 @@ from uuid import uuid4
 
 # Initialize the state if it doesn't exist
 if 'flow_state' not in st.session_state:
-    nodes = [...]
-    edges = [...]
+    nodes = []
+    edges = []
     st.session_state.flow_state = StreamlitFlowState(nodes, edges)
 
 # Use any operation that alters the state, for example add node, and then rerun
 if st.button("Add node"):
-    new_node = StreamlitFlowNode(key=str(f"st-flow-node_{uuid4()}"), 
-                                pos=(0, 0), 
-                                data={'content': f'Node {len(st.session_state.curr_state.nodes) + 1}'}, 
-                                node_type='default', 
-                                source_position='right', 
-                                target_position='left')
-    st.session_state.curr_state.nodes.append(new_node)
+    new_node = StreamlitFlowNode(id=str(f"st-flow-node_{uuid4()}"),
+                                 pos=(0, 0),
+                                 data={'content': f'Node {len(st.session_state.flow_state.nodes) + 1}'},
+                                 node_type='default',
+                                 source_position='right',
+                                 target_position='left')
+    st.session_state.flow_state.nodes.append(new_node)
     st.rerun()
 
 # Use the state as the argument, as well as to store the return value
