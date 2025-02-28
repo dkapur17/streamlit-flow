@@ -8,7 +8,58 @@
 
 ![Markdown Support in Node](assets/MarkdownNode.png)
 
-### 🎉 Version 1.5.0 is out now! 🎉
+### 🎉 Version 1.6.0 is out now! 🎉
+
+This version of StreamlitFlow fixes 2 major issues:
+
+1. Memory leak when interacting with the component (thanks @yyahav for bringing this up).
+2. Component not reflecting state changes made in Python.
+
+## Features
+
+- Create, edit and visualize beautiful flow diagrams.
+- Add nodes and edges, move them around, pan and zoom.
+- Edit node and edge properties.
+- Easy to use Layouts - Layered, Tree, Force, Stress, Radial, Random, and Manual.
+- Markdown Support in Nodes.
+- Interactions with Streamlit - clicks on nodes and edges can be captured in Streamlit.
+- Synchronized state management - changes to the state of the flow can be made seamlessly from the UI through user interactions as well as programmatically in Python, and the changes reflect on the UI without any state modification wizardry.
+
+
+A demo for all these features can be found [here](https://stflow.streamlit.app).
+
+## Installation
+
+```bash
+pip install streamlit-flow-component
+```
+
+## Running the example
+
+
+#### Install the dependencies
+```bash
+git clone https://github.com/dkapur17/streamlit-flow.git
+cd streamlit-flow
+npm install --prefix streamlit_flow/frontend
+```
+
+#### Run the frontent
+On the first terminal, run from the root of the repository
+```bash
+cd streamlit_flow/frontend
+npm start
+```
+
+#### Run this Example Streamlit App
+On the second terminal, run from the root of the repository
+```bash
+streamlit run example.py
+```
+
+## Change log
+
+### Version 1.5.0
 
 > [!WARNING] 
 >
@@ -56,70 +107,27 @@ from uuid import uuid4
 if 'flow_state' not in st.session_state:
     nodes = [...]
     edges = [...]
-    st.session_state.flow_state = StreamlitFlowState(nodes, edges)
+    st.session_state.flow_state = StreamlitFlowState(key="flow", nodes, edges)
 
 # Use any operation that alters the state, for example add node, and then rerun
 if st.button("Add node"):
-    new_node = StreamlitFlowNode(key=str(f"st-flow-node_{uuid4()}"), 
+    new_node = StreamlitFlowNode(id=str(f"st-flow-node_{uuid4()}"), 
                                 pos=(0, 0), 
-                                data={'content': f'Node {len(st.session_state.curr_state.nodes) + 1}'}, 
+                                data={'content': f'Node {len(st.session_state.flow_state.nodes) + 1}'}, 
                                 node_type='default', 
                                 source_position='right', 
                                 target_position='left')
-    st.session_state.curr_state.nodes.append(new_node)
+    st.session_state.flow_state.nodes.append(new_node)
     st.rerun()
 
 # Use the state as the argument, as well as to store the return value
 st.session_state.flow_state = streamlit_flow('flow', st.session_state.flow_state)
 ```
-### Minor Updates
+#### Minor Updates
 - **More Robust Returns**: The `streamlit_flow` component now returns the updated state on several user interactions, such as creating/deleting/editing/moving a node or an edge, to make sure the states stay synced.
 - **Edge Markers**: Ends of the edges can now be set to `arrow` or `arrowclosed` to represent directed edges, as well as further styled. Check out the style options [here](https://reactflow.dev/api-reference/types/edge-marker).
 - **Unified node dimensions**: Streamlit flow now only sets the dimensions of the nodes in the `style` dictionary, and let Reactflow handle computing the dimensions. This means that the `width` and `height` attributes of the nodes are now deprecated.
 
-## Features
-
-- Create, edit and visualize beautiful flow diagrams.
-- Add nodes and edges, move them around, pan and zoom.
-- Edit node and edge properties.
-- Easy to use Layouts - Layered, Tree, Force, Stress, Radial, Random, and Manual.
-- Markdown Support in Nodes.
-- Interactions with Streamlit - clicks on nodes and edges can be captured in Streamlit.
-- Synchronized state management - changes to the state of the flow can be made seamlessly from the UI through user interactions as well as programmatically in Python, and the changes reflect on the UI without any state modification wizardry.
-
-
-A demo for all these features can be found [here](https://stflow.streamlit.app).
-
-## Installation
-
-```bash
-pip install streamlit-flow-component
-```
-
-## Running the example
-
-
-#### Install the dependencies
-```bash
-git clone https://github.com/dkapur17/streamlit-flow.git
-cd streamlit-flow
-npm install --prefix streamlit_flow/frontend
-```
-
-#### Run the frontent
-On the first terminal, run from the root of the repository
-```bash
-cd streamlit_flow/frontend
-npm start
-```
-
-#### Run this Example Streamlit App
-On the second terminal, run from the root of the repository
-```bash
-streamlit run example.py
-```
-
-## Change log
 
 ### Version 1.2.9
 
