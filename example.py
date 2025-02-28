@@ -15,18 +15,10 @@ if 'curr_state' not in st.session_state:
 	nodes = [StreamlitFlowNode("1", (0, 0), {'content': 'Node 1'}, 'input', 'right'),
 			StreamlitFlowNode("2", (1, 0), {'content': 'Node 2'}, 'default', 'right', 'left'),
 			StreamlitFlowNode("3", (2, 0), {'content': 'Node 3'}, 'default', 'right', 'left'),
-			# StreamlitFlowNode("4", (2, 1), {'content': 'Node 4'}, 'output', target_position='left'),
-			# StreamlitFlowNode("5", (3, 0), {'content': 'Node 5'}, 'output', target_position='left'),
-			# StreamlitFlowNode("6", (3, 1), {'content': 'Node 6'}, 'output', target_position='left'),
-			# StreamlitFlowNode("7", (4, 0), {'content': 'Node 7'}, 'output', target_position='left'),
 			]
 
 	edges = [StreamlitFlowEdge("1-2", "1", "2", animated=True, marker_start={}, marker_end={'type': 'arrow'}),
 			StreamlitFlowEdge("1-3", "1", "3", animated=True),
-			# StreamlitFlowEdge("2-4", "2", "4", animated=True),
-			# StreamlitFlowEdge("2-5", "2", "5", animated=True),
-			# StreamlitFlowEdge("3-6", "3", "6", animated=True),
-			# StreamlitFlowEdge("3-7", "3", "7", animated=True)
 			]
 	
 	st.session_state.curr_state = StreamlitFlowState(nodes, edges)
@@ -48,7 +40,7 @@ with col2:
 			st.rerun()
 
 with col3:
-	if st.button("Add Edge"):
+	if st.button("Add Random Edge"):
 		if len(st.session_state.curr_state.nodes) > 1:
 
 			source_candidates = [streamlit_node for streamlit_node in st.session_state.curr_state.nodes if streamlit_node.type in ['input', 'default']]
@@ -69,7 +61,6 @@ with col4:
 
 with col5:
 	if st.button("Random Flow"):
-		del st.session_state.curr_state
 		nodes = [StreamlitFlowNode(str(f"st-flow-node_{uuid4()}"), (0, 0), {'content': f'Node {i}'}, 'default', 'right', 'left') for i in range(5)]
 		edges = []
 		for _ in range(5):
