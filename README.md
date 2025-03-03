@@ -10,10 +10,30 @@
 
 ### 🎉 Version 1.6.1 is out now! 🎉
 
+> [!WARNING] 
+>
+> StreamlitFlow v1.6.1 has breaking changes. Please read on to understand how to migrate your code to the new version.
+
+
 This version of StreamlitFlow fixes 2 major issues:
 
 1. Memory leak when interacting with the component (thanks @yyahav for bringing this up).
 2. Component not reflecting state changes made in Python.
+
+A side-effect of synchronizing the frontend and backend changes is that if the state is defined in a way that its re-initialized with every re-run, it would cause the component to re-render infinitely and will hang your streamlit app. You must store the state as part of the `session_state` to prevent it from re-initalizing every run.
+
+**DON'T**
+```python
+state = StreamlitFlowState(nodes, edges)
+streamlit_flow('key', state)
+```
+
+**DO**
+```python
+if 'state' not in st.session_state:
+    st.session_state.state = StreamlitFlowState(nodes, edge)
+streamlit_flow('key', st.session_state.state)
+```
 
 ## Features
 
